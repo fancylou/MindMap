@@ -27,7 +27,11 @@ class ViewController: UIViewController {
         
         let nodeB = MindMapNode()
         nodeB.name = "BBBB"
+        
+        let nodeC = MindMapNode()
+        nodeC.name = "CCCC"
         node.addChild(node: nodeB)
+        node.addChild(node: nodeC)
         mindMapVC.mindMapData = node
 
     }
