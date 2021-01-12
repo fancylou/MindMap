@@ -102,5 +102,12 @@ class MindMapLineView: CustomView {
         pathLayer.strokeColor = UIColor.red.cgColor
         pathLayer.fillColor = nil
         pathLayer.path = useBezier ? path.cgPath : linePath
+        print(11111111)
     }
+    
+    override func updateConstraints() {
+        super.updateConstraints()
+        print(222222)
+    }
+    
 }

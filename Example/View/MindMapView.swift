@@ -37,7 +37,7 @@ class CustomView: UIView {
 
 
 class MindMapNodeView: CustomView {
-    static var nodeGap: CGFloat = 30
+    static var nodeGap: CGFloat = 50
     static var nodeLineGap: CGFloat = 60
     var mindMapNode: MindMapNode
     var line: MindMapLineView?
@@ -51,6 +51,7 @@ class MindMapNodeView: CustomView {
     init(node: MindMapNode) {
         self.mindMapNode = node
         super.init(frame: .zero)
+        node.view = self
     }
     
     required init?(coder: NSCoder) {
@@ -89,6 +90,7 @@ class MindMapViewController: UIViewController {
             view.addSubview(nodeView)
             
             let positionIndex = CGFloat(node.getPostionIndex())
+            node.positionIndexCache = Int(positionIndex)
             
             nodeView.snp.makeConstraints { (ConstraintMaker) in
                 if node.position == .right {
@@ -141,6 +143,13 @@ class MindMapViewController: UIViewController {
                 tmpPostion = nil
                 tmpOffsetCenter = nil
                 tmpChildFrame = nil
+                if let node = mindMapData {
+                    updateNodesConstraints(node: node)
+                    UIView.animate(withDuration: 1) {
+                        self.view.layoutIfNeeded()
+                    }
+                }
+                return
             default:
                 break
         }
@@ -166,6 +175,49 @@ class MindMapViewController: UIViewController {
             }
         }
         
+    }
+    
+    func updateNodesConstraints(node: MindMapNode) {
+        guard let nodeView = node.view else {
+           return
+        }
+        
+        if let parentNode = node.parent?.view {
+//            nodeView.parentNodeView = parentNode
+
+//            view.addSubview(nodeView)
+
+            let positionIndex = CGFloat(node.getPostionIndex())
+            node.positionIndexCache = Int(positionIndex)
+
+            nodeView.snp.remakeConstraints { (ConstraintMaker) in
+                if node.position == .right {
+                    ConstraintMaker.left.equalTo(parentNode.snp.right).offset(MindMapNodeView.nodeGap).priority(.init(750))
+                    ConstraintMaker.centerY.equalTo(parentNode).priority(.init(750))
+                } else if node.position == .rightTop {
+                    ConstraintMaker.left.equalTo(parentNode.snp.right).offset(MindMapNodeView.nodeGap).priority(.init(750))
+                    ConstraintMaker.centerY.equalTo(parentNode).offset(-MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
+                } else if node.position == .rightBottom {
+                    ConstraintMaker.left.equalTo(parentNode.snp.right).offset(MindMapNodeView.nodeGap).priority(.init(750))
+                    ConstraintMaker.centerY.equalTo(parentNode).offset(MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
+                }
+            }
+            
+//            if let lView = nodeView.line {
+                nodeView.line?.setLayout(parent: parentNode, child: nodeView, position: node.position)
+//                let pan = UIPanGestureRecognizer(target: self, action: #selector(panCallback(pan:)))
+//                nodeView.addGestureRecognizer(pan)
+//            }
+        } else {
+//            view.addSubview(nodeView)
+            nodeView.snp.remakeConstraints { (ConstraintMaker) in
+                ConstraintMaker.center.equalToSuperview()
+            }
+        }
+
+        for child in node.children {
+            updateNodesConstraints(node: child)
+        }
     }
 }
 
