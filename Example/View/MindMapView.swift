@@ -140,17 +140,19 @@ class MindMapViewController: UIViewController {
                 tmpPostion = v.mindMapNode.position
                 tmpChildFrame = v.frame
             case .cancelled, .ended:
-                if let value = tmpOffsetCenter, let calcPosition = lastCalcPosition, let node = mindMapData {
+                if let calcPosition = lastCalcPosition, let node = mindMapData {
                     let parentCenterY = parentNodeView.frame.centerY
                     let childY = v.frame.centerY
                     var index = Int(abs(childY - parentCenterY) / MindMapNodeView.nodeLineGap) + 1
-                    
+
 
 //                    let oldNode = parentNodeView.mindMapNode.
-                    index = parentNodeView.mindMapNode.calcInsertIndex(node: v.mindMapNode, newPosition: calcPosition.transferValid(), geoIndex: index)
-
-                    v.mindMapNode.updatePosition(newPositin: calcPosition.transferValid(), newIndex: index)
+                    index = parentNodeView.mindMapNode.calcInsertIndex( newPosition: calcPosition.transferValid(), geoIndex: index)
                     
+                    parentNodeView.mindMapNode.move(node: v.mindMapNode, newIndex: index, newPosition: calcPosition.transferValid())
+
+//                    v.mindMapNode.updatePosition(newPositin: calcPosition.transferValid(), newIndex: index)
+
                     updateNodesConstraints(node: node)
                 }
                 
@@ -207,6 +209,15 @@ class MindMapViewController: UIViewController {
                     ConstraintMaker.centerY.equalTo(parentNode).offset(-MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
                 } else if node.position == .rightBottom {
                     ConstraintMaker.left.equalTo(parentNode.snp.right).offset(MindMapNodeView.nodeGap).priority(.init(750))
+                    ConstraintMaker.centerY.equalTo(parentNode).offset(MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
+                } else if node.position == .left {
+                    ConstraintMaker.right.equalTo(parentNode.snp.left).offset(-MindMapNodeView.nodeGap).priority(.init(750))
+                    ConstraintMaker.centerY.equalTo(parentNode).priority(.init(750))
+                } else if node.position == .leftTop {
+                    ConstraintMaker.right.equalTo(parentNode.snp.left).offset(-MindMapNodeView.nodeGap).priority(.init(750))
+                    ConstraintMaker.centerY.equalTo(parentNode).offset(-MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
+                } else if node.position == .leftBottom {
+                    ConstraintMaker.right.equalTo(parentNode.snp.left).offset(-MindMapNodeView.nodeGap).priority(.init(750))
                     ConstraintMaker.centerY.equalTo(parentNode).offset(MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
                 }
             }
