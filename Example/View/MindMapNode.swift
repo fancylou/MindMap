@@ -104,9 +104,13 @@ class MindMapNode {
         node.parent = self
         if let oldNodeIndex = nodes(positions: [node.position]).firstIndex(where: {$0.positionIndexCache == newIndex}) {
                 children.insert(node, at: oldNodeIndex)
+            
+            //重排
+            resort(node: node, isInsert: true)
         } else { // 没有冲突
 //            if [MindMapPosition.rightTop, MindMapPosition.leftTop].contains(node.position) { // 判断哪个顺序 top则放到数组后面 直接加入child就可以了
-                children.append(node)
+            children.append(node)
+            resort(node: node, isInsert: true)
 //            } else { //bottom顺序
 //                children.insert(node, at: 0)
 //            }

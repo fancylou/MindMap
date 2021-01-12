@@ -125,6 +125,7 @@ class MindMapViewController: UIViewController {
     
     var tmpOffsetCenter: CGPoint?
     var tmpPostion: MindMapPosition?
+    var lastCalcPosition: MindMapPosition?
     var tmpChildFrame: CGRect?
     @objc func panCallback(pan: UIPanGestureRecognizer) {
         guard let v = pan.view as? MindMapNodeView, let parentNodeView = v.parentNodeView else {
@@ -140,15 +141,18 @@ class MindMapViewController: UIViewController {
                 tmpPostion = v.mindMapNode.position
                 tmpChildFrame = v.frame
             case .cancelled, .ended:
+                if let value = tmpOffsetCenter, let calcPosition = lastCalcPosition, let node = mindMapData {
+                    let parentCenterY = parentNodeView.frame.centerY
+                    let childY = v.frame.centerY
+                    let row = Int(abs(childY - parentCenterY) / MindMapNodeView.nodeLineGap)
+                    v.mindMapNode.updatePosition(newPositin: calcPosition.transferValid(), newIndex: row + 1)
+                    
+                    updateNodesConstraints(node: node)
+                }
+                
                 tmpPostion = nil
                 tmpOffsetCenter = nil
                 tmpChildFrame = nil
-                if let node = mindMapData {
-                    updateNodesConstraints(node: node)
-                    UIView.animate(withDuration: 1) {
-                        self.view.layoutIfNeeded()
-                    }
-                }
                 return
             default:
                 break
@@ -163,6 +167,7 @@ class MindMapViewController: UIViewController {
             tmpFrame.origin.y += offset.y
 
         let position = MindMapPosition.generate(parentRect: parentNodeView.frame, childRect: tmpFrame)
+            lastCalcPosition = position
             
             if position != tmpPostion {
                 v.line?.setLayout(parent: parentNodeView, child: v, position: position)

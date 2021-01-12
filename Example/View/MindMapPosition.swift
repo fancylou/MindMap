@@ -26,6 +26,22 @@ enum MindMapPosition {
     static let leftPosition: [MindMapPosition] = [.left, .leftTop, .leftBottom]
     static let rightPosition: [MindMapPosition] = [.right, .rightTop, .rightBottom]
     
+    func transferValid() -> MindMapPosition {
+        switch self {
+        case .top, .topRight:
+            return .rightTop
+        case .bottom, .bottomRight:
+            return .rightBottom
+        case .topLeft:
+            return .leftTop
+        case .bottomLeft:
+            return .leftBottom
+        
+        default:
+            return .rightTop
+        }
+    }
+    
     static func generate(parentRect: CGRect, childRect: CGRect) -> MindMapPosition {
         let offsetCenter = childRect.offsetCenter(rect: parentRect)
         let collision = childRect.collision(rect: parentRect)
