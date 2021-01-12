@@ -90,8 +90,7 @@ class MindMapViewController: UIViewController {
             view.addSubview(nodeView)
             
             let positionIndex = CGFloat(node.getPostionIndex())
-            node.positionIndexCache = Int(positionIndex)
-            
+
             nodeView.snp.makeConstraints { (ConstraintMaker) in
                 if node.position == .right {
                     ConstraintMaker.left.equalTo(parentNode.snp.right).offset(MindMapNodeView.nodeGap)
@@ -144,8 +143,13 @@ class MindMapViewController: UIViewController {
                 if let value = tmpOffsetCenter, let calcPosition = lastCalcPosition, let node = mindMapData {
                     let parentCenterY = parentNodeView.frame.centerY
                     let childY = v.frame.centerY
-                    let row = Int(abs(childY - parentCenterY) / MindMapNodeView.nodeLineGap)
-                    v.mindMapNode.updatePosition(newPositin: calcPosition.transferValid(), newIndex: row + 1)
+                    var index = Int(abs(childY - parentCenterY) / MindMapNodeView.nodeLineGap) + 1
+                    
+
+//                    let oldNode = parentNodeView.mindMapNode.
+                    index = parentNodeView.mindMapNode.calcInsertIndex(node: v.mindMapNode, newPosition: calcPosition.transferValid(), geoIndex: index)
+
+                    v.mindMapNode.updatePosition(newPositin: calcPosition.transferValid(), newIndex: index)
                     
                     updateNodesConstraints(node: node)
                 }
@@ -193,7 +197,6 @@ class MindMapViewController: UIViewController {
 //            view.addSubview(nodeView)
 
             let positionIndex = CGFloat(node.getPostionIndex())
-            node.positionIndexCache = Int(positionIndex)
 
             nodeView.snp.remakeConstraints { (ConstraintMaker) in
                 if node.position == .right {

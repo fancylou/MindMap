@@ -38,7 +38,7 @@ enum MindMapPosition {
             return .leftBottom
         
         default:
-            return .rightTop
+            return self
         }
     }
     

@@ -12,7 +12,6 @@ import UIKit
 class MindMapNode {
     var name: String = ""
     var position: MindMapPosition = .rightBottom
-    var positionIndexCache: Int = 0
     private(set) var children: [MindMapNode] = []
     weak var parent: MindMapNode?
     weak var view: MindMapNodeView?
@@ -102,7 +101,12 @@ class MindMapNode {
     /**插入 保留position信息*/
     func insert(node: MindMapNode, newIndex: Int) {
         node.parent = self
-        if let oldNodeIndex = nodes(positions: [node.position]).firstIndex(where: {$0.positionIndexCache == newIndex}) {
+        
+        for i in nodes(positions: [node.position]) {
+            print(i.name)
+            print(i.getPostionIndex())
+        }
+        if let oldNodeIndex = children.firstIndex(where: {$0.getPostionIndex() == newIndex && $0.position == node.position}) {
                 children.insert(node, at: oldNodeIndex)
             
             //重排
@@ -173,38 +177,64 @@ class MindMapNode {
             return 0
         }
         
-        if [MindMapPosition.leftBottom, MindMapPosition.rightBottom].contains(position) {
+//        if [MindMapPosition.leftBottom, MindMapPosition.rightBottom].contains(position) {
             let nodes = parent.nodes(positions: [position])
             if let index = nodes.firstIndex(where: {$0 === self}) {
                return index + 1
             }
-        } else {
-            
-            let nodes = parent.nodes(positions: [position])
-            if let index = nodes.firstIndex(where: {$0 === self}) {
-                return nodes.count - index
-            }
-            
-        }
+//        } else {
+//
+//            let nodes = parent.nodes(positions: [position])
+//            if let index = nodes.firstIndex(where: {$0 === self}) {
+//                return index + 1
+//            }
+//
+//        }
         
         return 0
     }
     
     public func updatePosition(newPositin: MindMapPosition, newIndex: Int) {
-//        if newPositin == position {
-            if newIndex == positionIndexCache {
-                return
-            }
-            
-            if newIndex > positionIndexCache {
-                let p = parent
-                self.removeFromParent()
-                p?.insert(node: self, newIndex: newIndex)
-            }
-//        } else {
-//        }
+        let positionIndex = getPostionIndex()
+        if newIndex == positionIndex, newPositin == position {
+            return
+        }
+        
+        let p = parent
+        self.removeFromParent()
+        
+        self.position = newPositin
+        p?.insert(node: self, newIndex: newIndex)
+        
     }
     
+    func calcInsertIndex(node: MindMapNode, newPosition: MindMapPosition, geoIndex: Int) -> Int {
+        let result = nodes(positions: [newPosition])
+        var insertIndex = geoIndex
+        
+        if insertIndex > (result.count + 1) { //最大
+            insertIndex = result.count + 1
+        }
+//        return insertIndex
+        if node.position == newPosition {
+
+            return 0
+        } else {
+            
+            
+            
+            return 0
+        }
+    }
+    
+    func node( index: Int, position: MindMapPosition) -> MindMapNode?{
+        let result = nodes(positions: [position])
+        if index > result.count {
+            return nil
+        }
+        return result[index - 1]
+    }
+
     fileprivate func nodes(positions: [MindMapPosition]) -> [MindMapNode] {
         return children.filter{positions.contains($0.position)}
     }
