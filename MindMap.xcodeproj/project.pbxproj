@@ -24,6 +24,8 @@
 		9291065F25AC35D000E08BA1 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9291066125AC35E000E08BA1 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; };
 		9291066225AC35E000E08BA1 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		92CCD7BD25AD2BB100F85318 /* MindMapLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */; };
+		92CCD7C325AD2C7900F85318 /* MindMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CCD7C225AD2C7900F85318 /* MindMapNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +113,8 @@
 		9291061A25AC295B00E08BA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9291063225AC2C3500E08BA1 /* MindMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapView.swift; sourceTree = "<group>"; };
 		9291065025AC35BA00E08BA1 /* SnapKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SnapKit.xcodeproj; path = Carthage/Checkouts/SnapKit/SnapKit.xcodeproj; sourceTree = "<group>"; };
+		92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapLineView.swift; sourceTree = "<group>"; };
+		92CCD7C225AD2C7900F85318 /* MindMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +230,8 @@
 			children = (
 				9291063225AC2C3500E08BA1 /* MindMapView.swift */,
 				927008E525AC92640059609B /* MindMapPosition.swift */,
+				92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */,
+				92CCD7C225AD2C7900F85318 /* MindMapNode.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -445,8 +451,10 @@
 				929105FB25AC295A00E08BA1 /* ViewController.swift in Sources */,
 				9291063325AC2C3500E08BA1 /* MindMapView.swift in Sources */,
 				927008E625AC92640059609B /* MindMapPosition.swift in Sources */,
+				92CCD7C325AD2C7900F85318 /* MindMapNode.swift in Sources */,
 				929105F725AC295A00E08BA1 /* AppDelegate.swift in Sources */,
 				929105F925AC295A00E08BA1 /* SceneDelegate.swift in Sources */,
+				92CCD7BD25AD2BB100F85318 /* MindMapLineView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

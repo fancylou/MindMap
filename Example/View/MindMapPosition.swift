@@ -37,15 +37,15 @@ enum MindMapPosition {
         if collision.0 == false && collision.1 == false {
             if offsetCenter.x > 0 {
                 if offsetCenter.y > 0 {
-                    return .bottomRight
+                    return .rightBottom
                 } else {
-                    return .topRight
+                    return .rightTop
                 }
             } else if offsetCenter.x < 0 {
                 if offsetCenter.y > 0 {
-                    return .bottomLeft
+                    return .leftBottom
                 } else {
-                    return .topLeft
+                    return .leftTop
                 }
             }
         }

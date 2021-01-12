@@ -34,134 +34,6 @@ class CustomView: UIView {
     }
 }
 
-class MindMapNode {
-    var name: String = ""
-    var position: MindMapPosition = .rightBottom
-    private(set) var children: [MindMapNode] = []
-    weak var parent: MindMapNode?
-    
-
-    func addChild(node: MindMapNode) {
-        node.parent = self
-        children.append(node)
-        if MindMapPosition.rightPosition.contains(node.position) {
-            let rightNodes = nodes(positions: MindMapPosition.rightPosition)
-            let count = rightNodes.count
-            if count == 1 {
-                node.position = .right
-            } else {
-                if count % 2 == 0 {
-                    let rightNode = nodes(positions: [.right]).first
-                    let rightTopCount = nodes(positions: [.rightTop]).count
-                    let rightBottomCount = nodes(positions: [.rightBottom]).count
-                    if rightTopCount > rightBottomCount {
-                        rightNode?.position = .rightBottom
-                    } else {
-                        rightNode?.position = .rightTop
-                    }
-                } else {
-                    node.position = .right
-                }
-            }
-        } else { //left
-            
-            let leftNodes = nodes(positions: MindMapPosition.leftPosition)
-            let count = leftNodes.count
-            if count == 1 {
-                node.position = .left
-            } else {
-                if count % 2 == 0 {
-                    let leftNode = nodes(positions: [.left]).first
-                    let leftTopCount = nodes(positions: [.leftTop]).count
-                    let leftBottomCount = nodes(positions: [.leftBottom]).count
-                    if leftTopCount > leftBottomCount {
-                        leftNode?.position = .leftBottom
-                    } else {
-                        leftNode?.position = .leftTop
-                    }
-                } else {
-                    node.position = .left
-                }
-            }
-        }
-    }
-    
-    public func getPostionIndex() -> Int {
-        guard let parent = parent else {
-            return 0
-        }
-        
-        if [MindMapPosition.left, MindMapPosition.right].contains(position) {
-            return 0
-        }
-        
-        if [MindMapPosition.leftBottom, MindMapPosition.rightBottom].contains(position) {
-            let nodes = parent.nodes(positions: [position])
-            if let index = nodes.firstIndex(where: {$0 === self}) {
-               return index + 1
-            }
-        } else {
-            
-            let nodes = parent.nodes(positions: [position])
-            if let index = nodes.firstIndex(where: {$0 === self}) {
-                return nodes.count - index
-            }
-            
-        }
-
-        return 0
-    }
-    
-    fileprivate func nodes(positions: [MindMapPosition]) -> [MindMapNode] {
-        return children.filter{positions.contains($0.position)}
-    }
-}
-
-class MindMapLineView: CustomView {
-    let pathLayer = CAShapeLayer()
-    
-    override func setupUI() {
-        layer.addSublayer(pathLayer)
-    }
-    
-    func setLayout(parent: MindMapNodeView, child: MindMapNodeView, position: MindMapPosition) {
-        if position == .rightBottom {
-            transform = .init(scaleX: 1, y: -1)
-        } else if position == .rightTop {
-            transform = .init(scaleX: 1, y: 1)
-        } else if position == .leftTop {
-            transform = .init(scaleX: -1, y: 1)
-        } else if position == .leftBottom {
-            transform = .init(scaleX: -1, y: -1)
-        }
-        
-        self.snp.remakeConstraints { (ConstraintMaker) in
-            if [MindMapPosition.right, MindMapPosition.rightTop].contains(position) {
-                ConstraintMaker.left.equalTo(parent.snp.right)
-                ConstraintMaker.right.equalTo(child.snp.left)
-                ConstraintMaker.bottom.equalTo(parent.snp.centerY)
-                ConstraintMaker.top.equalTo(child.snp.centerY)
-            } else if position == .rightBottom {
-                ConstraintMaker.bottom.equalTo(child.snp.centerY)
-                ConstraintMaker.left.equalTo(parent.snp.right)
-                ConstraintMaker.right.equalTo(child.snp.left)
-                ConstraintMaker.top.equalTo(parent.snp.centerY)
-            }
-        }
-    }
-    
-    override func layoutSubviews() {
-        pathLayer.frame = bounds
-        let path = UIBezierPath()
-        let rect = self.bounds
-        path.move(to: CGPoint.init(x: 0, y: rect.maxY))
-        path.addCurve(to: .init(x: rect.maxX, y: 0) , controlPoint1: .init(x: rect.maxX / 2, y: rect.maxY), controlPoint2: .init(x: rect.maxX / 2, y: 0))
-        path.lineWidth = 1
-        pathLayer.strokeColor = UIColor.red.cgColor
-        pathLayer.fillColor = nil
-        pathLayer.path = path.cgPath
-    }
-}
 
 
 class MindMapNodeView: CustomView {
@@ -236,7 +108,6 @@ class MindMapViewController: UIViewController {
             lView.setLayout(parent: parentNode, child: nodeView, position: node.position)
             let pan = UIPanGestureRecognizer(target: self, action: #selector(panCallback(pan:)))
             nodeView.addGestureRecognizer(pan)
-//            lView.transform = .init(scaleX: 1, y: -1)
         } else {
             view.addSubview(nodeView)
             nodeView.snp.makeConstraints { (ConstraintMaker) in
@@ -281,9 +152,7 @@ class MindMapViewController: UIViewController {
             var tmpFrame = tmpChildFrame
             tmpFrame.origin.x += offset.x
             tmpFrame.origin.y += offset.y
-            print(offset)
-            print(tmpFrame)
-            
+
         let position = MindMapPosition.generate(parentRect: parentNodeView.frame, childRect: tmpFrame)
             
             if position != tmpPostion {
@@ -292,12 +161,11 @@ class MindMapViewController: UIViewController {
             }
             
             v.snp.remakeConstraints { (ConstraintMaker) in
-                ConstraintMaker.centerX.equalTo(parentNodeView).offset(offset.x + value.x)
-                ConstraintMaker.centerY.equalTo(parentNodeView).offset(offset.y + value.y)
+                ConstraintMaker.centerX.equalTo(parentNodeView).offset(offset.x + value.x).priority(ConstraintPriority.init(750))
+                ConstraintMaker.centerY.equalTo(parentNodeView).offset(offset.y + value.y).priority(ConstraintPriority.init(750))
             }
         }
         
-        //        v.transform = .init(translationX: offset.x, y: offset.y)
     }
 }
 
@@ -308,11 +176,11 @@ extension CGRect {
        var x = true
        var y = true
         
-        if minX > rect.maxX && maxX < rect.minX {
+        if minX > rect.maxX || maxX < rect.minX {
             x = false
         }
         
-        if minY > rect.maxY && maxY < rect.minY {
+        if minY > rect.maxY || maxY < rect.minY {
             y = false
         }
         
