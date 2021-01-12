@@ -145,15 +145,15 @@ class MindMapViewController: UIViewController {
                     let childY = v.frame.centerY
                     var index = Int(abs(childY - parentCenterY) / MindMapNodeView.nodeLineGap) + 1
 
-
-//                    let oldNode = parentNodeView.mindMapNode.
                     index = parentNodeView.mindMapNode.calcInsertIndex( newPosition: calcPosition.transferValid(), geoIndex: index)
                     
                     parentNodeView.mindMapNode.move(node: v.mindMapNode, newIndex: index, newPosition: calcPosition.transferValid())
 
-//                    v.mindMapNode.updatePosition(newPositin: calcPosition.transferValid(), newIndex: index)
-
                     updateNodesConstraints(node: node)
+                    
+                    UIView.animate(withDuration: 0.25) {
+                        self.view.layoutIfNeeded()
+                    }
                 }
                 
                 tmpPostion = nil
