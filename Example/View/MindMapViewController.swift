@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class MindMapViewController: UIViewController {
+class MindMapViewController: UIViewController, UIScrollViewDelegate {
 
     var mindMapData: MindMapNode?
     var selectedView: MindMapNodeView? {
@@ -32,8 +32,33 @@ class MindMapViewController: UIViewController {
     
     let contentView = UIView()
     
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return self.contentView
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        scrollView.setContentOffset(.init(x: 800, y: 700), animated: true)
+    }
+
     override func viewDidLoad() {
-//        view.addSubview()
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        scrollView.maximumZoomScale = 2
+        scrollView.minimumZoomScale = 0.3
+        scrollView.delegate = self
+
+        scrollView.snp.makeConstraints { (ConstraintMaker) in
+            ConstraintMaker.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { (ConstraintMaker) in
+            ConstraintMaker.edges.equalToSuperview()
+            ConstraintMaker.width.equalTo(2000)
+            ConstraintMaker.height.equalTo(2000)
+        }
+        
+//        contentView.backgroundColor = .gray
         
         if let node = mindMapData {
             updateNodesConstraints(node: node)
@@ -147,7 +172,7 @@ class MindMapViewController: UIViewController {
             nodeView.parentNodeView = parentNode
 
             if nodeView.superview == nil {
-                view.addSubview(nodeView)
+                contentView.addSubview(nodeView)
             }
 
             let positionIndex = CGFloat(node.getPostionIndex())
@@ -177,7 +202,7 @@ class MindMapViewController: UIViewController {
             if nodeView.line == nil {
                 let lView = MindMapLineView()
                 nodeView.line = lView
-                view.addSubview(lView)
+                contentView.addSubview(lView)
                 let pan = UIPanGestureRecognizer(target: self, action: #selector(panCallback(pan:)))
                 nodeView.addGestureRecognizer(pan)
             }
@@ -186,7 +211,7 @@ class MindMapViewController: UIViewController {
             
         } else {
             if nodeView.superview == nil {
-                view.addSubview(nodeView)
+                contentView.addSubview(nodeView)
             }
             nodeView.snp.remakeConstraints { (ConstraintMaker) in
                 ConstraintMaker.center.equalToSuperview()

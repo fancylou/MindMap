@@ -19,6 +19,15 @@ class MindMapNode {
     
     func resort() {
         
+        //翻转
+        if parent != nil {
+            if MindMapPosition.rightPosition.contains(self.position) { // 本节点在右侧 则子节点也在右侧
+                _ = children.map{$0.position = .rightBottom}
+            } else {
+                _ = children.map{$0.position = .leftBottom}
+            }
+        }
+        
         var nodes = self.nodes(positions: MindMapPosition.rightPosition)
         var numFlag = nodes.count / 2
         var oddFlag = nodes.count % 2 == 1
@@ -32,6 +41,7 @@ class MindMapNode {
                     node.position = .right
                 }
             }
+            node.resort()
         }
         
         nodes = self.nodes(positions: MindMapPosition.leftPosition)
@@ -47,6 +57,7 @@ class MindMapNode {
                     node.position = .left
                 }
             }
+            node.resort()
         }
         
     }
