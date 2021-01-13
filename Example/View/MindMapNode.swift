@@ -12,6 +12,7 @@ import UIKit
 class MindMapNode {
     var name: String = ""
     var position: MindMapPosition = .rightBottom
+    
     private(set) var children: [MindMapNode] = []
     weak var parent: MindMapNode?
     weak var view: MindMapNodeView?
@@ -48,72 +49,6 @@ class MindMapNode {
             }
         }
         
-//        if MindMapPosition.rightPosition.contains(node.position) {
-//            let rightNodes = nodes(positions: MindMapPosition.rightPosition)
-//            let count = rightNodes.count
-//            if count == 1 {
-//                if isInsert {
-//                    node.position = .right
-//                } else {
-//                    rightNodes.first?.position = .right
-//                }
-//            } else {
-//                let rightTopNodes = nodes(positions: [.rightTop])
-//                let rightBottomNodes = nodes(positions: [.rightBottom])
-//                let rightTopCount = rightTopNodes.count
-//                let rightBottomCount = rightBottomNodes.count
-//                let rightTopIsBig = rightTopCount > rightBottomCount
-//
-//                if count % 2 == 0 {
-//                    if isInsert {
-//                        let rightNode = nodes(positions: [.right]).first
-//                        if rightTopIsBig {
-//                            rightNode?.position = .rightBottom
-//                        } else {
-//                            rightNode?.position = .rightTop
-//                        }
-//                    } else {
-//                        if let rightNode = nodes(positions: [.right]).first {
-//                            if rightTopIsBig {
-//                                rightNode.position = .rightBottom
-//                            } else {
-//                                rightNode.position = .rightTop
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    if isInsert {
-//                        node.position = .right
-//                    } else {
-//                        if rightTopIsBig {
-//                            rightTopNodes.last?.position = .right
-//                        } else {
-//                            rightBottomNodes.first?.position = .right
-//                        }
-//                    }
-//                }
-//            }
-//        } else { //left todo
-//
-//            let leftNodes = nodes(positions: MindMapPosition.leftPosition)
-//            let count = leftNodes.count
-//            if count == 1 {
-//                node.position = .left
-//            } else {
-//                if count % 2 == 0 {
-//                    let leftNode = nodes(positions: [.left]).first
-//                    let leftTopCount = nodes(positions: [.leftTop]).count
-//                    let leftBottomCount = nodes(positions: [.leftBottom]).count
-//                    if leftTopCount > leftBottomCount {
-//                        leftNode?.position = .leftBottom
-//                    } else {
-//                        leftNode?.position = .leftTop
-//                    }
-//                } else {
-//                    node.position = .left
-//                }
-//            }
-//        }
     }
     
     func removeFromParent() {
@@ -162,11 +97,7 @@ class MindMapNode {
         }
         
         node.position = newPosition
-        
         resort()
-        print(111)
-        
-        
     }
 
     func addChild(node: MindMapNode) {
@@ -201,20 +132,6 @@ class MindMapNode {
         return 0
     }
     
-//    public func updatePosition(newPositin: MindMapPosition, newIndex: Int) {
-//        let positionIndex = getPostionIndex()
-//        if newIndex == positionIndex, newPositin == position {
-//            return
-//        }
-//
-//        let p = parent
-//        self.removeFromParent()
-//
-//        self.position = newPositin
-//        p?.insert(node: self, newIndex: newIndex)
-//
-//    }
-    
     func calcInsertIndex(newPosition: MindMapPosition, geoIndex: Int) -> Int {
         let result = nodes(positions: [newPosition])
         var insertIndex = geoIndex
@@ -225,16 +142,6 @@ class MindMapNode {
         
         return insertIndex
         
-//        return insertIndex
-//        if node.position == newPosition {
-//
-//            return 0
-//        } else {
-//
-//
-//
-//            return 0
-//        }
     }
     
     func getNode( index: Int, position: MindMapPosition) -> MindMapNode?{
