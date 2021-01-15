@@ -171,6 +171,39 @@ class MindMapNode {
             return result[result.count - index]
         }
     }
+    
+    func slibing(isLast: Bool = true) -> MindMapNode? {
+        guard let c = parent?.children else {
+            return nil
+        }
+        if let index = c.firstIndex(where: {$0 === self}) {
+            if isLast {
+                if index == 0 {
+                    return nil
+                }
+                return c[index - 1]
+            } else {
+               let i = index + 1
+                if i == c.count {
+                    return nil
+                }
+                return c[i]
+            }
+        }
+        return nil
+    }
+    
+    func deepNode(isTop: Bool = true) -> MindMapNode {
+        if children.count == 0 {
+            return self
+        }
+        
+        if isTop {
+            return children.first!.deepNode(isTop: isTop)
+        } else {
+            return children.last!.deepNode(isTop: isTop)
+        }
+    }
 
     fileprivate func nodes(positions: [MindMapPosition]) -> [MindMapNode] {
         return children.filter{positions.contains($0.position)}

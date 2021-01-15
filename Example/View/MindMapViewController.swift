@@ -93,6 +93,7 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
     var tmpPostion: MindMapPosition?
     var lastCalcPosition: MindMapPosition?
     var tmpChildFrame: CGRect?
+    var closedNode: MindMapNode?
     
     @objc func tapNode(tap: UITapGestureRecognizer) {
         self.selectedView = tap.view as? MindMapNodeView
@@ -102,12 +103,15 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
         guard let v = pan.view as? MindMapNodeView, let parentNodeView = v.parentNodeView else {
             return
         }
-        let offset = pan.translation(in: nil)
+        var offset = pan.translation(in: nil)
+        offset.x /= self.scrollView.zoomScale
+        offset.y /= self.scrollView.zoomScale
         let offsetCenter = v.frame.offsetCenter(rect: parentNodeView.frame)
         
         
         switch pan.state {
             case .began:
+                closedNode = parentNodeView.mindMapNode
                 tmpOffsetCenter = offsetCenter
                 tmpPostion = v.mindMapNode.position
                 tmpChildFrame = v.frame
@@ -137,30 +141,37 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
         }
         
 
+        //判断closeNode
+        let nowClosedNode: MindMapNode? = parentNodeView.mindMapNode.children.first
+        if nowClosedNode !== closedNode {
+            closedNode = nowClosedNode
+            tmpOffsetCenter = tmpChildFrame?.offsetCenter(rect: nowClosedNode?.view?.frame ?? .zero)
+        }
+        //---
         
-        if let value = tmpOffsetCenter, let tmpChildFrame = tmpChildFrame, let tmpPostion = tmpPostion {
+        if let value = tmpOffsetCenter, let tmpChildFrame = tmpChildFrame, let tmpPostion = tmpPostion, let closedNodeView = closedNode?.view {
             
             var tmpFrame = tmpChildFrame
             tmpFrame.origin.x += offset.x
             tmpFrame.origin.y += offset.y
 
-        let position = MindMapPosition.generate(parentRect: parentNodeView.frame, childRect: tmpFrame)
+        let position = MindMapPosition.generate(parentRect: closedNodeView.frame, childRect: tmpFrame)
             lastCalcPosition = position
             
             if position != tmpPostion {
-                v.line?.setLayout(parent: parentNodeView, child: v, position: position)
+                v.line?.setLayout(parent: closedNodeView, child: v, position: position)
                 self.tmpPostion = position
             }
             
             v.snp.remakeConstraints { (ConstraintMaker) in
-                ConstraintMaker.centerX.equalTo(parentNodeView).offset(offset.x + value.x).priority(ConstraintPriority.init(750))
-                ConstraintMaker.centerY.equalTo(parentNodeView).offset(offset.y + value.y).priority(ConstraintPriority.init(750))
+                ConstraintMaker.centerX.equalTo(closedNodeView).offset(offset.x + value.x).priority(ConstraintPriority.init(750))
+                ConstraintMaker.centerY.equalTo(closedNodeView).offset(offset.y + value.y).priority(ConstraintPriority.init(750))
             }
         }
         
     }
     
-    func updateNodesConstraints(parentNode: MindMapNodeView? = nil, node: MindMapNode) {
+    func updateNodeBaseConstraints(parentNode: MindMapNodeView? = nil, node: MindMapNode) {
         var nodeView: MindMapNodeView! = node.view
         if nodeView == nil {
            nodeView = MindMapNodeView(node: node)
@@ -175,7 +186,7 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
                 contentView.addSubview(nodeView)
             }
 
-            let positionIndex = CGFloat(node.getPostionIndex())
+//            let positionIndex = CGFloat(node.getPostionIndex())
 
             nodeView.snp.remakeConstraints { (ConstraintMaker) in
                 if node.position == .right {
@@ -183,19 +194,19 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
                     ConstraintMaker.centerY.equalTo(parentNode).priority(.init(750))
                 } else if node.position == .rightTop {
                     ConstraintMaker.left.equalTo(parentNode.snp.right).offset(MindMapNodeView.nodeGap).priority(.init(750))
-                    ConstraintMaker.centerY.equalTo(parentNode).offset(-MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
+//                    ConstraintMaker.centerY.equalTo(parentNode).offset(-MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
                 } else if node.position == .rightBottom {
                     ConstraintMaker.left.equalTo(parentNode.snp.right).offset(MindMapNodeView.nodeGap).priority(.init(750))
-                    ConstraintMaker.centerY.equalTo(parentNode).offset(MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
+//                    ConstraintMaker.centerY.equalTo(parentNode).offset(MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
                 } else if node.position == .left {
                     ConstraintMaker.right.equalTo(parentNode.snp.left).offset(-MindMapNodeView.nodeGap).priority(.init(750))
                     ConstraintMaker.centerY.equalTo(parentNode).priority(.init(750))
                 } else if node.position == .leftTop {
                     ConstraintMaker.right.equalTo(parentNode.snp.left).offset(-MindMapNodeView.nodeGap).priority(.init(750))
-                    ConstraintMaker.centerY.equalTo(parentNode).offset(-MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
+//                    ConstraintMaker.centerY.equalTo(parentNode).offset(-MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
                 } else if node.position == .leftBottom {
                     ConstraintMaker.right.equalTo(parentNode.snp.left).offset(-MindMapNodeView.nodeGap).priority(.init(750))
-                    ConstraintMaker.centerY.equalTo(parentNode).offset(MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
+//                    ConstraintMaker.centerY.equalTo(parentNode).offset(MindMapNodeView.nodeLineGap * positionIndex).priority(.init(750))
                 }
             }
             
@@ -219,8 +230,34 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
         }
 
         for child in node.children {
-            updateNodesConstraints(parentNode: nodeView, node: child)
+            updateNodeBaseConstraints(parentNode: nodeView, node: child)
         }
+    }
+    
+    func addSlibingConstraints(node: MindMapNode) {
+        if let lastSlibing = node.slibing() {
+            let n1 = node.deepNode()
+            let n2 = lastSlibing.deepNode(isTop: false)
+            print("node: \(node.name) \(n1.name) - \(n2.name)")
+            if let v1 = n1.view, let v2 = n2.view {
+                v1.snp.makeConstraints { (ConstraintMaker) in
+                    ConstraintMaker.top.equalTo(v2.snp.bottom).offset(MindMapNodeView.nodeLineGap)
+                }
+            }
+//            return
+        } else {
+                
+        }
+        
+        for cn in node.children {
+            addSlibingConstraints(node: cn)
+        }
+        
+    }
+
+    func updateNodesConstraints(parentNode: MindMapNodeView? = nil, node: MindMapNode) {
+        updateNodeBaseConstraints(parentNode: parentNode, node: node)
+        addSlibingConstraints(node: node)
     }
 }
 

@@ -39,6 +39,11 @@ class ViewController: UIViewController {
         
         let nodeF = MindMapNode()
         nodeF.name = "FFFF"
+        for i in ["1", "2", "3"] {
+            let n = MindMapNode()
+            n.name = i
+            nodeF.addChild(node: n)
+        }
         
         let nodeG = MindMapNode()
         nodeG.name = "GGGG"

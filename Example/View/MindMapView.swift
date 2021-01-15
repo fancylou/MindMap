@@ -64,6 +64,12 @@ class MindMapNodeView: CustomView {
         self.layer.borderWidth = selected ? 3: 0
     }
     
+    func dragSafeArea() -> CGRect {
+        var rect = frame
+        var extendWidth = MindMapNodeView.nodeGap
+        return rect
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
