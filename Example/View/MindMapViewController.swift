@@ -241,7 +241,7 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
             print("node: \(node.name) \(n1.name) - \(n2.name)")
             if let v1 = n1.view, let v2 = n2.view {
                 v1.snp.makeConstraints { (ConstraintMaker) in
-                    ConstraintMaker.top.equalTo(v2.snp.bottom).offset(MindMapNodeView.nodeLineGap)
+                    ConstraintMaker.top.greaterThanOrEqualTo(v2.snp.bottom).offset(MindMapNodeView.nodeLineGap)
                 }
             }
 //            return
