@@ -68,8 +68,22 @@ class MindMapNodeView: CustomView {
         self.layer.borderWidth = selected ? 3: 0
     }
     
+    func selfDragSafeArea() -> CGRect {
+        var rect = frame
+        let extendWidth = MindMapNodeView.nodeGap
+        if mindMapNode.position.isLeftPosition() == false {
+            rect.size.width += extendWidth
+        } else {
+            rect.size.width += extendWidth
+            rect.origin.x -= extendWidth
+        }
+//        rect.origin.y -= MindMapNodeView.nodeLineGap / 2
+//        rect.size.height += MindMapNodeView.nodeLineGap
+        return rect
+    }
+    
     func selfAndOneDeepChildSafeArea() -> CGRect {
-        var rect: CGRect = .zero
+        var rect: CGRect = selfDragSafeArea()
         var rects = [CGRect]()
         for c in mindMapNode.children {
             if let r = c.view?.frame {
@@ -81,8 +95,8 @@ class MindMapNodeView: CustomView {
         }
         
         if rects.count > 0 {
-            rect.origin.y -= MindMapNodeView.nodeLineGap
-            rect.size.height += MindMapNodeView.nodeLineGap * 2
+            rect.origin.y -= MindMapNodeView.nodeLineGap / 2
+            rect.size.height += MindMapNodeView.nodeLineGap
         }
 
         return rect
