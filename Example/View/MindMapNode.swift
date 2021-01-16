@@ -112,9 +112,13 @@ class MindMapNode {
         resort()
     }
 
-    func addChild(node: MindMapNode) {
+    func addChild(node: MindMapNode, index: Int? = nil) {
         node.parent = self
-        children.append(node)
+        if let i = index {
+            children.insert(node, at: i)
+        } else {
+            children.append(node)
+        }
         resort()
     }
     
@@ -174,9 +178,12 @@ class MindMapNode {
     }
     
     func slibing(isLast: Bool = true) -> MindMapNode? {
-        guard let c = parent?.children else {
+        guard let c = parent?.children.filter({ (x) -> Bool in
+            x.position.isLeftPosition() == self.position.isLeftPosition()
+        }) else {
             return nil
         }
+        
         if let index = c.firstIndex(where: {$0 === self}) {
             if isLast {
                 if index == 0 {
@@ -204,6 +211,16 @@ class MindMapNode {
         } else {
             return children.last!.deepNode(isTop: isTop)
         }
+    }
+    
+    func getInnerNode() -> [MindMapNode] {
+        
+        var result = [MindMapNode]()
+        result.append(self)
+        for c in children {
+            result.append(contentsOf: c.getInnerNode())
+        }
+        return result
     }
 
     fileprivate func nodes(positions: [MindMapPosition]) -> [MindMapNode] {

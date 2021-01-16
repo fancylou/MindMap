@@ -38,7 +38,7 @@ class CustomView: UIView {
 
 class MindMapNodeView: CustomView {
     static var nodeGap: CGFloat = 50
-    static var nodeLineGap: CGFloat = 60
+    static var nodeLineGap: CGFloat = 20
     var mindMapNode: MindMapNode
     var line: MindMapLineView?
     var parentNodeView: MindMapNodeView?
@@ -68,9 +68,23 @@ class MindMapNodeView: CustomView {
         self.layer.borderWidth = selected ? 3: 0
     }
     
-    func dragSafeArea() -> CGRect {
-        var rect = frame
-        var extendWidth = MindMapNodeView.nodeGap
+    func selfAndOneDeepChildSafeArea() -> CGRect {
+        var rect: CGRect = .zero
+        var rects = [CGRect]()
+        for c in mindMapNode.children {
+            if let r = c.view?.frame {
+                rects.append(r)
+            }
+        }
+        rect = rects.reduce(rect) { (r, v) -> CGRect in
+            return r.union(v)
+        }
+        
+        if rects.count > 0 {
+            rect.origin.y -= MindMapNodeView.nodeLineGap
+            rect.size.height += MindMapNodeView.nodeLineGap * 2
+        }
+
         return rect
     }
     
@@ -89,4 +103,77 @@ class MindMapNodeView: CustomView {
         
         nameLabel.text = mindMapNode.name
     }
+    
+    func getInnerNodeView() -> [MindMapNodeView] {
+        
+        return mindMapNode.getInnerNode().map{$0.view}
+            .compactMap{$0}
+    }
+    
+    func removeOtherNodeViewConstraint(constraintsContainerView: UIView) {
+        let innerNodeView = getInnerNodeView()
+        
+        for c in constraintsContainerView.constraints.filter({$0.firstItem is MindMapNodeView && $0.secondItem is MindMapNodeView}) {
+            var needRemove: [NSLayoutConstraint] = []
+            
+            if innerNodeView.contains(where: {$0 === c.firstItem}), innerNodeView.contains(where: {$0 === c.secondItem}) {
+                continue
+            }
+            
+            needRemove.append(c)
+            constraintsContainerView.removeConstraints(needRemove)
+
+        }
+        
+    }
+    
+    func findColsedNodeView(rect: CGRect) -> MindMapNodeView {
+        let views = getInnerNodeView()
+
+        for v in views {
+            let isCollision = v.selfAndOneDeepChildSafeArea().collision(rect: rect)
+            if isCollision.0, isCollision.1 {
+                return v
+            }
+        }
+        
+        var minDistance: CGFloat!
+        var closedView: MindMapNodeView?
+        
+        for v in views {
+           let distance = v.frame.offsetCenter(rect: rect)
+            if minDistance == nil || distance.distancePower < minDistance {
+                minDistance = distance.distancePower
+                closedView = v
+            }
+        }
+        
+        return closedView ??  self
+    }
+    
+    func findInsertIndex(rect: CGRect, position: MindMapPosition) -> Int {
+        var index: Int = 0
+       let samePostionNodes = mindMapNode.children
+            .filter({ (x: MindMapNode) -> Bool in
+                return x.position.isLeftPosition() == position.isLeftPosition()
+            })
+        
+        for (offset, node) in samePostionNodes.enumerated() {
+            if let v = node.view {
+                if rect.centerY > v.frame.centerY {
+                    index = offset + 1
+                } else {
+                    break
+                }
+            }
+        }
+        
+        if index > 0 {
+            let realIndex = mindMapNode.children.firstIndex(where: {$0 === samePostionNodes[index - 1]})!
+            return Int(realIndex) + 1
+        } else {
+            return index
+        }
+    }
+    
 }

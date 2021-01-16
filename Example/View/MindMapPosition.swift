@@ -26,6 +26,16 @@ enum MindMapPosition {
     static let leftPosition: [MindMapPosition] = [.left, .leftTop, .leftBottom]
     static let rightPosition: [MindMapPosition] = [.right, .rightTop, .rightBottom]
     
+    
+    
+    func isLeftPosition() -> Bool {
+        if MindMapPosition.leftPosition.contains(self) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     func transferValid() -> MindMapPosition {
         switch self {
         case .top, .topRight:

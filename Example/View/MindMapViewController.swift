@@ -90,10 +90,11 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
     }
 
     var tmpOffsetCenter: CGPoint?
-    var tmpPostion: MindMapPosition?
     var lastCalcPosition: MindMapPosition?
     var tmpChildFrame: CGRect?
     var closedNode: MindMapNode?
+    
+    var dragNode: MindMapNode?
     
     @objc func tapNode(tap: UITapGestureRecognizer) {
         self.selectedView = tap.view as? MindMapNodeView
@@ -113,47 +114,51 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
             case .began:
                 closedNode = parentNodeView.mindMapNode
                 tmpOffsetCenter = offsetCenter
-                tmpPostion = v.mindMapNode.position
                 tmpChildFrame = v.frame
                 
-//                v.mindMapNode.removeFromParent()
-//                updateNodesConstraints(parentNode: nil, node: mindMapData!)
+                closedNode = parentNodeView.mindMapNode
+                dragNode = v.mindMapNode
+                v.mindMapNode.removeFromParent()
+                v.removeOtherNodeViewConstraint(constraintsContainerView: self.contentView)
+                updateNodesConstraints(parentNode: nil, node: mindMapData!)
+//                            UIView.animate(withDuration: 0.25) {
+//                                self.view.layoutIfNeeded()
+//                            }
             case .cancelled, .ended:
-//                if let calcPosition = lastCalcPosition, let node = mindMapData {
+                if let node = mindMapData, let lastCalcPosition = lastCalcPosition {
 //                    let parentCenterY = parentNodeView.frame.centerY
 //                    let childY = v.frame.centerY
+                    
 //                    var index = Int(abs(childY - parentCenterY) / MindMapNodeView.nodeLineGap) + 1
-//
-//                    index = parentNodeView.mindMapNode.calcInsertIndex( newPosition: calcPosition.transferValid(), geoIndex: index)
-//
-//                    parentNodeView.mindMapNode.move(node: v.mindMapNode, newIndex: index, newPosition: calcPosition.transferValid())
-//
-//
-//                    self.updateNodesConstraints(node: node)
-//                    UIView.animate(withDuration: 0.25) {
-//                        self.view.layoutIfNeeded()
-//                    }
-//                }
-//
-//                tmpPostion = nil
-//                tmpOffsetCenter = nil
-//                tmpChildFrame = nil
+                    v.mindMapNode.position = lastCalcPosition
+                    if let index = closedNode?.view?.findInsertIndex(rect: v.frame, position: lastCalcPosition.transferValid()) {
+                        closedNode?.addChild(node: v.mindMapNode, index: index)
+                        self.updateNodesConstraints(node: node)
+                        UIView.animate(withDuration: 0.25) {
+                            self.view.layoutIfNeeded()
+                        }
+                    }
+                }
+
+                tmpOffsetCenter = nil
+                tmpChildFrame = nil
                 return
             default:
                 break
         }
         
 
-        /*
         //判断closeNode
-        let nowClosedNode: MindMapNode? = parentNodeView.mindMapNode.children.first
+        let findedCloseView = mindMapData?.view?.findColsedNodeView(rect: v.frame)
+//        let nowClosedNode: MindMapNode? = parentNodeView.mindMapNode
+        let nowClosedNode: MindMapNode? = findedCloseView?.mindMapNode
         if nowClosedNode !== closedNode {
             closedNode = nowClosedNode
             tmpOffsetCenter = tmpChildFrame?.offsetCenter(rect: nowClosedNode?.view?.frame ?? .zero)
         }
         //---
         
-        if let value = tmpOffsetCenter, let tmpChildFrame = tmpChildFrame, let tmpPostion = tmpPostion, let closedNodeView = closedNode?.view {
+        if let value = tmpOffsetCenter, let tmpChildFrame = tmpChildFrame,  let closedNodeView = closedNode?.view {
             
             var tmpFrame = tmpChildFrame
             tmpFrame.origin.x += offset.x
@@ -162,18 +167,14 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
         let position = MindMapPosition.generate(parentRect: closedNodeView.frame, childRect: tmpFrame)
             lastCalcPosition = position
             
-            if position != tmpPostion {
-                v.line?.setLayout(parent: closedNodeView, child: v, position: position)
-                self.tmpPostion = position
-            }
-            
+            v.line?.setLayout(parent: closedNodeView, child: v, position: position)
+
             v.snp.remakeConstraints { (ConstraintMaker) in
                 ConstraintMaker.centerX.equalTo(closedNodeView).offset(offset.x + value.x).priority(ConstraintPriority.init(750))
                 ConstraintMaker.centerY.equalTo(closedNodeView).offset(offset.y + value.y).priority(ConstraintPriority.init(750))
             }
         }
         
- */
     }
     
 //    var
@@ -205,6 +206,12 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
                 } else if node.position == .left || node.position == .leftTop || node.position == .leftBottom {
                     ConstraintMaker.right.equalTo(parentNode.snp.left).offset(-MindMapNodeView.nodeGap).priority(.init(750))
                     ConstraintMaker.centerY.equalTo(parentNode).priority(.init(750))
+                    
+                    if node.position == .leftTop {
+                        ConstraintMaker.bottom.lessThanOrEqualTo(parentNode.snp.top).offset(-MindMapNodeView.nodeLineGap)
+                    } else if node.position == .leftBottom {
+                        ConstraintMaker.top.greaterThanOrEqualTo(parentNode.snp.bottom).offset(MindMapNodeView.nodeLineGap)
+                    }
                 }
             }
             
@@ -236,7 +243,6 @@ class MindMapViewController: UIViewController, UIScrollViewDelegate {
         if let lastSlibing = node.slibing() {
             let n1 = node.deepNode()
             let n2 = lastSlibing.deepNode(isTop: false)
-            print("node: \(node.name) \(n1.name) - \(n2.name)")
             if let v1 = n1.view, let v2 = n2.view {
                 if let existConstaint = v1.constraints.first(where: { (x) -> Bool in
                     return x.firstItem === v1 && x.secondItem === v2
@@ -290,5 +296,23 @@ extension CGRect {
     
     var centerX: CGFloat {
        return maxX - (width / 2)
+    }
+    
+    func union(rect: CGRect) -> CGRect {
+        var result = CGRect()
+        result.origin.x = min(minX, rect.minX)
+        result.origin.y = min(minY, rect.minY)
+        let max_x = max(maxX, rect.maxX)
+        let max_y = max(maxY, rect.maxY)
+        result.size.width = max_x - result.origin.x
+        result.size.height = max_y - result.origin.y
+
+        return result
+    }
+}
+
+extension CGPoint {
+    var distancePower: CGFloat {
+        return x * x + y * y
     }
 }
