@@ -70,6 +70,7 @@ class MindMapNode {
         if let index = children.firstIndex(where: {$0 === node}) {
             children.remove(at: index)
         }
+        node.parent?.resort()
         node.parent = nil
     }
     

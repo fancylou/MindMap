@@ -45,6 +45,10 @@ class MindMapNodeView: CustomView {
     let nameLabel: UILabel = {
         let x = UILabel()
         x.textColor = .white
+        x.setContentHuggingPriority(.init(1000), for: .vertical)
+        x.setContentHuggingPriority(.init(1000), for: .horizontal)
+        x.setContentCompressionResistancePriority(.init(1000), for: .vertical)
+        x.setContentCompressionResistancePriority(.init(1000), for: .horizontal)
         return x
     }()
     

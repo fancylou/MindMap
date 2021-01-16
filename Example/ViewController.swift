@@ -53,7 +53,7 @@ class ViewController: UIViewController {
         node.addChild(node: nodeD)
         node.addChild(node: nodeE)
         node.addChild(node: nodeF)
-//        node.addChild(node: nodeG)
+        node.addChild(node: nodeG)
         mindMapVC.mindMapData = node
 
     }
