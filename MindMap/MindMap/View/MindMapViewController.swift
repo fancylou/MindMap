@@ -37,14 +37,16 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
     
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        scrollView.setContentOffset(.init(x: 800, y: 700), animated: true)
+//        scrollView.setContentOffset(.init(x: 800, y: 700), animated: true)
+        gotoMapSource()
     }
 
     open override func viewDidLoad() {
+//        contentView.backgroundColor = .green
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         scrollView.maximumZoomScale = 2
-        scrollView.minimumZoomScale = 0.3
+        scrollView.minimumZoomScale = 0.5
         scrollView.delegate = self
 
         scrollView.snp.makeConstraints { (ConstraintMaker) in
@@ -53,16 +55,16 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
         
         contentView.snp.makeConstraints { (ConstraintMaker) in
             ConstraintMaker.edges.equalToSuperview()
-            ConstraintMaker.width.equalTo(2000)
-            ConstraintMaker.height.equalTo(2000)
+            ConstraintMaker.width.equalTo(1000)
+            ConstraintMaker.height.equalTo(1000)
         }
-        
-//        contentView.backgroundColor = .gray
         
         if let node = mindMapData {
             updateNodesConstraints(node: node)
+            self.view.layoutIfNeeded()
+            updateContentSize()
         }
-        
+
         view.addSubview(toolView)
         
         toolView.snp.makeConstraints { (ConstraintMaker) in
@@ -72,6 +74,46 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
 
         toolView.addChildNodeBtn.addTarget(self, action: #selector(addChildNode), for: .touchUpInside)
         toolView.addSlibingNodeBtn.addTarget(self, action: #selector(addSlibingChildNode), for: .touchUpInside)
+    }
+    
+    func gotoMapSource() {
+        guard let frame = mindMapData?.view?.frame else {
+            return
+        }
+        let screenBounds = UIScreen.main.bounds
+        self.scrollView.setContentOffset(.init(x: frame.centerX - screenBounds.width / 2, y: frame.centerY - screenBounds.height / 2), animated: true)
+    }
+    
+    func updateContentSize() {
+        guard let frame = self.mindMapData?.view?.totalNodeViewFrame() else {
+            return
+        }
+        
+        let size = frame.size
+        let screenBounds = UIScreen.main.bounds
+        var w = size.width * 2 + screenBounds.width
+        var h = size.height * 2 + screenBounds.height
+        let scrollViewBounds = self.scrollView.bounds
+        if w < scrollViewBounds.width {
+            w = scrollViewBounds.width
+        }
+        if h < scrollViewBounds.height {
+            h = scrollViewBounds.height
+        }
+        
+        let oldBounds = contentView.bounds
+        let widthOffset = w - oldBounds.width
+        let heightOffset = h - oldBounds.height
+        
+        contentView.snp.updateConstraints { (ConstraintMaker) in
+            ConstraintMaker.width.equalTo(w)
+            ConstraintMaker.height.equalTo(h)
+        }
+
+        self.view.layoutIfNeeded()
+        let oldOffset = self.scrollView.contentOffset
+        self.scrollView.setContentOffset(.init(x: oldOffset.x + widthOffset / 2, y: oldOffset.y + heightOffset / 2) , animated: false)
+        
     }
     
 
@@ -88,6 +130,8 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
         
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
+        } completion: {[unowned self] (_) in
+            self.updateContentSize()
         }
     }
     
@@ -103,6 +147,8 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
         
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
+        } completion: {[unowned self] (_) in
+            self.updateContentSize()
         }
     }
 
@@ -112,6 +158,11 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
     var closedNode: MindMapNode?
     
     var dragNode: MindMapNode?
+    
+//    open override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//
+//    }
     
     @objc func tapNode(tap: UITapGestureRecognizer) {
         self.selectedView = tap.view as? MindMapNodeView
@@ -153,6 +204,8 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
                         self.updateNodesConstraints(node: node)
                         UIView.animate(withDuration: 0.25) {
                             self.view.layoutIfNeeded()
+                        } completion: {[unowned self] (_) in
+                            self.updateContentSize()
                         }
                     }
                 }
@@ -259,8 +312,8 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
     
     func addSlibingConstraints(node: MindMapNode) {
         if let lastSlibing = node.slibing() {
-            let n1 = node.deepNode()
-            let n2 = lastSlibing.deepNode(isTop: false)
+            let n1 = node.deepNode(isLeft: node.position.isLeftPosition())
+            let n2 = lastSlibing.deepNode(isTop: false, isLeft: lastSlibing.position.isLeftPosition())
             if let v1 = n1.view, let v2 = n2.view {
                 if let existConstaint = v1.constraints.first(where: { (x) -> Bool in
                     return x.firstItem === v1 && x.secondItem === v2
@@ -316,17 +369,17 @@ extension CGRect {
        return maxX - (width / 2)
     }
     
-    func union(rect: CGRect) -> CGRect {
-        var result = CGRect()
-        result.origin.x = min(minX, rect.minX)
-        result.origin.y = min(minY, rect.minY)
-        let max_x = max(maxX, rect.maxX)
-        let max_y = max(maxY, rect.maxY)
-        result.size.width = max_x - result.origin.x
-        result.size.height = max_y - result.origin.y
-
-        return result
-    }
+//    func union(rect: CGRect) -> CGRect {
+//        var result = CGRect()
+//        result.origin.x = min(minX, rect.minX)
+//        result.origin.y = min(minY, rect.minY)
+//        let max_x = max(maxX, rect.maxX)
+//        let max_y = max(maxY, rect.maxY)
+//        result.size.width = max_x - result.origin.x
+//        result.size.height = max_y - result.origin.y
+//
+//        return result
+//    }
 }
 
 extension CGPoint {

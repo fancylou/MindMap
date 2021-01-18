@@ -149,15 +149,16 @@ open class MindMapNode {
         return nil
     }
     
-    public func deepNode(isTop: Bool = true) -> MindMapNode {
-        if children.count == 0 {
+    public func deepNode(isTop: Bool = true, isLeft: Bool = false) -> MindMapNode {
+        let subNodes = children.filter({$0.position.isLeftPosition() == isLeft})
+        if subNodes.count == 0 {
             return self
         }
         
         if isTop {
-            return children.first!.deepNode(isTop: isTop)
+            return subNodes.first!.deepNode(isTop: isTop, isLeft: isLeft)
         } else {
-            return children.last!.deepNode(isTop: isTop)
+            return subNodes.last!.deepNode(isTop: isTop, isLeft: isLeft)
         }
     }
     

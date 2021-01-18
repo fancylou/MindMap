@@ -50,11 +50,11 @@ class ViewController: UIViewController {
         nodeG.name = "GGGG"
         
         node.addChild(node: nodeB)
-        node.addChild(node: nodeC)
-        node.addChild(node: nodeD)
-        node.addChild(node: nodeE)
-        node.addChild(node: nodeF)
-        node.addChild(node: nodeG)
+//        node.addChild(node: nodeC)
+//        node.addChild(node: nodeD)
+//        node.addChild(node: nodeE)
+//        node.addChild(node: nodeF)
+//        node.addChild(node: nodeG)
         mindMapVC.mindMapData = node
 
     }

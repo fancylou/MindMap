@@ -192,4 +192,17 @@ open class MindMapNodeView: NodeMapCustomView {
         }
     }
     
+    public func totalNodeViewFrame() -> CGRect {
+        let nodes = self.mindMapNode.getInnerNode()
+        return nodes.map{$0.view?.frame}.compactMap{$0}
+            .filter{$0 != .zero}
+            .reduce(CGRect.zero) { (r, v) -> CGRect in
+                if r == .zero {
+                    return v
+                } else {
+                    return r.union(v)
+                }
+            }
+    }
+    
 }
