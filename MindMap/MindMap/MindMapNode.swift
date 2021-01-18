@@ -75,47 +75,8 @@ open class MindMapNode {
         node.parent = nil
     }
     
-    /**插入 保留position信息*/
-    /*
-    func move(node: MindMapNode, newIndex: Int, newPosition: MindMapPosition) {
-        
-        if let oldNode = self.getNode(index: newIndex, position: newPosition) {
-            if oldNode === node {
-                return
-            }
-            
-            
-            node.removeFromParent()
-            
-            guard let oldNodeIndex = children.firstIndex(where: {$0 === oldNode}) else {
-                return
-            }
-            
-            if [MindMapPosition.rightTop, MindMapPosition.leftTop].contains(newPosition) {
-                children.insert(node, at: oldNodeIndex + 1)
-            } else {
-                children.insert(node, at: oldNodeIndex)
-            }
-            node.parent = self
-            
-        } else { // 没有冲突
-            
-            node.removeFromParent()
-            node.parent = self
-            
-            if [MindMapPosition.rightTop, MindMapPosition.leftTop].contains(newPosition) {
-                children.insert(node, at: 0)
-            } else {
-                children.append(node)
-            }
-        }
-        
-        node.position = newPosition
-        resort()
-    }
- */
     
-  public  func addChild(node: MindMapNode, index: Int? = nil) {
+    public  func addChild(node: MindMapNode, index: Int? = nil) {
         node.parent = self
         if let i = index {
             children.insert(node, at: i)
@@ -152,7 +113,7 @@ open class MindMapNode {
     }
     
     
-   public func calcInsertIndex(newPosition: MindMapPosition, geoIndex: Int) -> Int {
+    public func calcInsertIndex(newPosition: MindMapPosition, geoIndex: Int) -> Int {
         let result = nodes(positions: [newPosition])
         var insertIndex = geoIndex
         
@@ -162,23 +123,6 @@ open class MindMapNode {
         
         return insertIndex
         
-    }
-    
-    func getNode( index: Int, position: MindMapPosition) -> MindMapNode?{
-        let result = nodes(positions: [position])
-        if index > result.count {
-            return nil
-        }
-        
-        if [MindMapPosition.left, MindMapPosition.right].contains(position) {
-            return result[index - 1]
-        }
-        
-        if [MindMapPosition.leftBottom, MindMapPosition.rightBottom].contains(position) {
-            return result[index - 1]
-        } else {
-            return result[result.count - index]
-        }
     }
     
     public func slibing(isLast: Bool = true) -> MindMapNode? {

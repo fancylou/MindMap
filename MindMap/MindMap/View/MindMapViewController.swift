@@ -15,13 +15,12 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
    open var selectedView: MindMapNodeView? {
         didSet {
             oldValue?.selected = false
+            oldValue?.nameTextField.isUserInteractionEnabled = false
             selectedView?.selected = true
         }
     }
-    public let addChildNodeBtn: UIButton = {
-      let x = UIButton()
-        x.setTitle("添加子节点", for: .normal)
-        x.backgroundColor = .black
+    public let toolView: NodeToolView = {
+      let x = NodeToolView()
         return x
     }()
     
@@ -64,14 +63,32 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
             updateNodesConstraints(node: node)
         }
         
-        view.addSubview(addChildNodeBtn)
+        view.addSubview(toolView)
         
-        addChildNodeBtn.snp.makeConstraints { (ConstraintMaker) in
-            ConstraintMaker.centerX.equalToSuperview()
+        toolView.snp.makeConstraints { (ConstraintMaker) in
+            ConstraintMaker.right.equalTo(-20)
             ConstraintMaker.bottom.equalTo(-30)
         }
 
-        addChildNodeBtn.addTarget(self, action: #selector(addChildNode), for: .touchUpInside)
+        toolView.addChildNodeBtn.addTarget(self, action: #selector(addChildNode), for: .touchUpInside)
+        toolView.addSlibingNodeBtn.addTarget(self, action: #selector(addSlibingChildNode), for: .touchUpInside)
+    }
+    
+
+    @objc func addSlibingChildNode() {
+        guard let selectedView = selectedView, let insertIndex = selectedView.mindMapNode.parent?.children.firstIndex(where: {$0 === selectedView.mindMapNode}) else {
+           return
+        }
+        
+        let node = MindMapNode.init()
+        node.name = "子节点"
+        node.position = selectedView.mindMapNode.position
+        selectedView.mindMapNode.parent?.addChild(node: node, index: insertIndex + 1)
+        updateNodesConstraints(parentNode: nil, node: mindMapData!)
+        
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     @objc func addChildNode() {
@@ -80,7 +97,7 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
         }
         
         let node = MindMapNode.init()
-        node.name = "test"
+        node.name = "子节点"
         selectedView.mindMapNode.addChild(node: node)
         updateNodesConstraints(parentNode: nil, node: mindMapData!)
         
@@ -98,6 +115,13 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
     
     @objc func tapNode(tap: UITapGestureRecognizer) {
         self.selectedView = tap.view as? MindMapNodeView
+    }
+    
+    @objc func doubleTapNode(tap: UITapGestureRecognizer) {
+        let v =  tap.view as? MindMapNodeView
+        self.selectedView = v
+        v?.nameTextField.isUserInteractionEnabled = true
+        v?.nameTextField.becomeFirstResponder()
     }
     
     @objc func panCallback(pan: UIPanGestureRecognizer) {
@@ -121,16 +145,9 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
                 v.mindMapNode.removeFromParent()
                 v.removeOtherNodeViewConstraint(constraintsContainerView: self.contentView)
                 updateNodesConstraints(parentNode: nil, node: mindMapData!)
-//                            UIView.animate(withDuration: 0.25) {
-//                                self.view.layoutIfNeeded()
-//                            }
             case .cancelled, .ended:
                 if let node = mindMapData, let lastCalcPosition = lastCalcPosition {
-//                    let parentCenterY = parentNodeView.frame.centerY
-//                    let childY = v.frame.centerY
-                    
-//                    var index = Int(abs(childY - parentCenterY) / MindMapNodeView.nodeLineGap) + 1
-                    v.mindMapNode.position = lastCalcPosition
+                    v.mindMapNode.position = lastCalcPosition.transferValid()
                     if let index = closedNode?.view?.findInsertIndex(rect: v.frame, position: lastCalcPosition.transferValid()) {
                         closedNode?.addChild(node: v.mindMapNode, index: index)
                         self.updateNodesConstraints(node: node)
@@ -177,14 +194,15 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
         
     }
     
-//    var
-    
     func updateNodeBaseConstraints(parentNode: MindMapNodeView? = nil, node: MindMapNode) {
         var nodeView: MindMapNodeView! = node.view
         if nodeView == nil {
            nodeView = MindMapNodeView(node: node)
             let tap = UITapGestureRecognizer(target: self, action: #selector(MindMapViewController.tapNode(tap:)))
             nodeView.addGestureRecognizer(tap)
+            let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapNode(tap:)))
+            doubleTap.numberOfTapsRequired = 2
+            nodeView.addGestureRecognizer(doubleTap)
         }
 
         if let parentNode = parentNode {

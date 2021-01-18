@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-open class MindMapLineView: CustomView {
+open class MindMapLineView: NodeMapCustomView {
     let pathLayer = CAShapeLayer()
     
     override func setupUI() {

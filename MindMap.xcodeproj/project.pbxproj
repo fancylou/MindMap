@@ -22,6 +22,10 @@
 		9291065F25AC35D000E08BA1 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9291066125AC35E000E08BA1 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; };
 		9291066225AC35E000E08BA1 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9298FAA425B560F900776ABB /* node_slibing.png in Resources */ = {isa = PBXBuildFile; fileRef = 9298FAA225B560F900776ABB /* node_slibing.png */; };
+		9298FAA525B560F900776ABB /* node@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9298FAA325B560F900776ABB /* node@3x.png */; };
+		9298FAA925B5659800776ABB /* MindMapRes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9298FAA825B5659800776ABB /* MindMapRes.swift */; };
+		9298FAB325B566EB00776ABB /* NodeToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9298FAB225B566EB00776ABB /* NodeToolView.swift */; };
 		92E732C425B518B500674977 /* MindMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B85B525AEE0EF006AB77F /* MindMapViewController.swift */; };
 		92E732C525B518B500674977 /* MindMapLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */; };
 		92E732C625B518B500674977 /* MindMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9291063225AC2C3500E08BA1 /* MindMapView.swift */; };
@@ -115,6 +119,10 @@
 		9291061A25AC295B00E08BA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9291063225AC2C3500E08BA1 /* MindMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapView.swift; sourceTree = "<group>"; };
 		9291065025AC35BA00E08BA1 /* SnapKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SnapKit.xcodeproj; path = Carthage/Checkouts/SnapKit/SnapKit.xcodeproj; sourceTree = "<group>"; };
+		9298FAA225B560F900776ABB /* node_slibing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = node_slibing.png; sourceTree = "<group>"; };
+		9298FAA325B560F900776ABB /* node@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "node@3x.png"; sourceTree = "<group>"; };
+		9298FAA825B5659800776ABB /* MindMapRes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapRes.swift; sourceTree = "<group>"; };
+		9298FAB225B566EB00776ABB /* NodeToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeToolView.swift; sourceTree = "<group>"; };
 		92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapLineView.swift; sourceTree = "<group>"; };
 		92CCD7C225AD2C7900F85318 /* MindMapNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -181,6 +189,7 @@
 		929105E625AC292100E08BA1 /* MindMap */ = {
 			isa = PBXGroup;
 			children = (
+				9298FAA125B560EF00776ABB /* Res */,
 				92E732C325B518AC00674977 /* MindMap */,
 				929105E725AC292100E08BA1 /* MindMap.h */,
 				929105E825AC292100E08BA1 /* Info.plist */,
@@ -244,14 +253,33 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		9298FAA125B560EF00776ABB /* Res */ = {
+			isa = PBXGroup;
+			children = (
+				9298FAA225B560F900776ABB /* node_slibing.png */,
+				9298FAA325B560F900776ABB /* node@3x.png */,
+			);
+			path = Res;
+			sourceTree = "<group>";
+		};
+		9298FAB625B567BF00776ABB /* View */ = {
+			isa = PBXGroup;
+			children = (
+				921B85B525AEE0EF006AB77F /* MindMapViewController.swift */,
+				9291063225AC2C3500E08BA1 /* MindMapView.swift */,
+				92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */,
+				9298FAB225B566EB00776ABB /* NodeToolView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		92E732C325B518AC00674977 /* MindMap */ = {
 			isa = PBXGroup;
 			children = (
-				9291063225AC2C3500E08BA1 /* MindMapView.swift */,
+				9298FAB625B567BF00776ABB /* View */,
 				927008E525AC92640059609B /* MindMapPosition.swift */,
-				92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */,
 				92CCD7C225AD2C7900F85318 /* MindMapNode.swift */,
-				921B85B525AEE0EF006AB77F /* MindMapViewController.swift */,
+				9298FAA825B5659800776ABB /* MindMapRes.swift */,
 			);
 			path = MindMap;
 			sourceTree = "<group>";
@@ -418,6 +446,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9298FAA425B560F900776ABB /* node_slibing.png in Resources */,
+				9298FAA525B560F900776ABB /* node@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,7 +486,9 @@
 				92E732C625B518B500674977 /* MindMapView.swift in Sources */,
 				92E732C825B518B500674977 /* MindMapPosition.swift in Sources */,
 				92E732C425B518B500674977 /* MindMapViewController.swift in Sources */,
+				9298FAA925B5659800776ABB /* MindMapRes.swift in Sources */,
 				92E732C525B518B500674977 /* MindMapLineView.swift in Sources */,
+				9298FAB325B566EB00776ABB /* NodeToolView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-open class CustomView: UIView {
+open class NodeMapCustomView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -36,19 +36,20 @@ open class CustomView: UIView {
 
 
 
-open class MindMapNodeView: CustomView {
+open class MindMapNodeView: NodeMapCustomView {
     public static var nodeGap: CGFloat = 50
     public static var nodeLineGap: CGFloat = 20
     open var mindMapNode: MindMapNode
     open var line: MindMapLineView?
     open var parentNodeView: MindMapNodeView?
-    public let nameLabel: UILabel = {
-        let x = UILabel()
+    public let nameTextField: UITextField = {
+        let x = UITextField()
         x.textColor = .white
         x.setContentHuggingPriority(.init(1000), for: .vertical)
         x.setContentHuggingPriority(.init(1000), for: .horizontal)
         x.setContentCompressionResistancePriority(.init(1000), for: .vertical)
         x.setContentCompressionResistancePriority(.init(1000), for: .horizontal)
+        x.isUserInteractionEnabled = false
         return x
     }()
     
@@ -66,6 +67,7 @@ open class MindMapNodeView: CustomView {
         node.view = self
         self.layer.borderColor = self.selectedBorderColor.cgColor
         self.layer.borderWidth = selected ? 3: 0
+        self.layer.cornerRadius = 8
     }
     
     public func selfDragSafeArea() -> CGRect {
@@ -108,14 +110,14 @@ open class MindMapNodeView: CustomView {
     
     public override func setupUI() {
         backgroundColor = .black
-           _ = [nameLabel]
+           _ = [nameTextField]
             .map{addSubview($0)}
         
-        nameLabel.snp.makeConstraints { (ConstraintMaker) in
-            ConstraintMaker.edges.equalTo(UIEdgeInsets.init(top: 5, left: 5, bottom: 5, right: 5))
+        nameTextField.snp.makeConstraints { (ConstraintMaker) in
+            ConstraintMaker.edges.equalTo(UIEdgeInsets.init(top: 5, left: 10, bottom: 5, right: 10))
         }
         
-        nameLabel.text = mindMapNode.name
+        nameTextField.text = mindMapNode.name
     }
     
     public func getInnerNodeView() -> [MindMapNodeView] {
