@@ -9,39 +9,39 @@ import Foundation
 import UIKit
 import SnapKit
 
-class MindMapViewController: UIViewController, UIScrollViewDelegate {
+open class MindMapViewController: UIViewController, UIScrollViewDelegate {
 
-    var mindMapData: MindMapNode?
-    var selectedView: MindMapNodeView? {
+   open var mindMapData: MindMapNode?
+   open var selectedView: MindMapNodeView? {
         didSet {
             oldValue?.selected = false
             selectedView?.selected = true
         }
     }
-    let addChildNodeBtn: UIButton = {
+    public let addChildNodeBtn: UIButton = {
       let x = UIButton()
         x.setTitle("添加子节点", for: .normal)
         x.backgroundColor = .black
         return x
     }()
     
-    let scrollView: UIScrollView = {
+    public let scrollView: UIScrollView = {
       let x = UIScrollView()
         return x
     }()
     
-    let contentView = UIView()
+    public let contentView = UIView()
     
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.contentView
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scrollView.setContentOffset(.init(x: 800, y: 700), animated: true)
     }
 
-    override func viewDidLoad() {
+    open override func viewDidLoad() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         scrollView.maximumZoomScale = 2

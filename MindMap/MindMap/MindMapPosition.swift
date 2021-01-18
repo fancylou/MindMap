@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-enum MindMapPosition {
+public enum MindMapPosition {
     case right
     case rightTop
     case rightBottom
@@ -23,12 +23,12 @@ enum MindMapPosition {
     case bottomRight
     case collision
     
-    static let leftPosition: [MindMapPosition] = [.left, .leftTop, .leftBottom]
-    static let rightPosition: [MindMapPosition] = [.right, .rightTop, .rightBottom]
+    public static let leftPosition: [MindMapPosition] = [.left, .leftTop, .leftBottom]
+    public static let rightPosition: [MindMapPosition] = [.right, .rightTop, .rightBottom]
     
     
     
-    func isLeftPosition() -> Bool {
+   public func isLeftPosition() -> Bool {
         if MindMapPosition.leftPosition.contains(self) {
             return true
         } else {
@@ -36,7 +36,7 @@ enum MindMapPosition {
         }
     }
     
-    func transferValid() -> MindMapPosition {
+   public func transferValid() -> MindMapPosition {
         switch self {
         case .top, .topRight:
             return .rightTop
@@ -52,7 +52,7 @@ enum MindMapPosition {
         }
     }
     
-    static func generate(parentRect: CGRect, childRect: CGRect) -> MindMapPosition {
+    public static func generate(parentRect: CGRect, childRect: CGRect) -> MindMapPosition {
         let offsetCenter = childRect.offsetCenter(rect: parentRect)
         let collision = childRect.collision(rect: parentRect)
         

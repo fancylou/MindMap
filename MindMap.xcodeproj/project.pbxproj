@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		921B85B625AEE0EF006AB77F /* MindMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B85B525AEE0EF006AB77F /* MindMapViewController.swift */; };
-		927008E625AC92640059609B /* MindMapPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927008E525AC92640059609B /* MindMapPosition.swift */; };
 		929105E925AC292100E08BA1 /* MindMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 929105E725AC292100E08BA1 /* MindMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		929105F725AC295A00E08BA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929105F625AC295A00E08BA1 /* AppDelegate.swift */; };
 		929105F925AC295A00E08BA1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929105F825AC295A00E08BA1 /* SceneDelegate.swift */; };
@@ -20,13 +18,15 @@
 		9291061925AC295B00E08BA1 /* ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9291061825AC295B00E08BA1 /* ExampleUITests.swift */; };
 		9291062925AC297A00E08BA1 /* MindMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929105E425AC292100E08BA1 /* MindMap.framework */; };
 		9291062A25AC297A00E08BA1 /* MindMap.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 929105E425AC292100E08BA1 /* MindMap.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9291063325AC2C3500E08BA1 /* MindMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9291063225AC2C3500E08BA1 /* MindMapView.swift */; };
 		9291065E25AC35D000E08BA1 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; platformFilter = ios; };
 		9291065F25AC35D000E08BA1 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9291066125AC35E000E08BA1 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; };
 		9291066225AC35E000E08BA1 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		92CCD7BD25AD2BB100F85318 /* MindMapLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */; };
-		92CCD7C325AD2C7900F85318 /* MindMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CCD7C225AD2C7900F85318 /* MindMapNode.swift */; };
+		92E732C425B518B500674977 /* MindMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921B85B525AEE0EF006AB77F /* MindMapViewController.swift */; };
+		92E732C525B518B500674977 /* MindMapLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */; };
+		92E732C625B518B500674977 /* MindMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9291063225AC2C3500E08BA1 /* MindMapView.swift */; };
+		92E732C725B518B500674977 /* MindMapNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CCD7C225AD2C7900F85318 /* MindMapNode.swift */; };
+		92E732C825B518B500674977 /* MindMapPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927008E525AC92640059609B /* MindMapPosition.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -181,6 +181,7 @@
 		929105E625AC292100E08BA1 /* MindMap */ = {
 			isa = PBXGroup;
 			children = (
+				92E732C325B518AC00674977 /* MindMap */,
 				929105E725AC292100E08BA1 /* MindMap.h */,
 				929105E825AC292100E08BA1 /* Info.plist */,
 			);
@@ -230,11 +231,6 @@
 		9291063125AC2C2E00E08BA1 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				9291063225AC2C3500E08BA1 /* MindMapView.swift */,
-				927008E525AC92640059609B /* MindMapPosition.swift */,
-				92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */,
-				92CCD7C225AD2C7900F85318 /* MindMapNode.swift */,
-				921B85B525AEE0EF006AB77F /* MindMapViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -246,6 +242,18 @@
 				9291065825AC35BA00E08BA1 /* SnapKit Tests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		92E732C325B518AC00674977 /* MindMap */ = {
+			isa = PBXGroup;
+			children = (
+				9291063225AC2C3500E08BA1 /* MindMapView.swift */,
+				927008E525AC92640059609B /* MindMapPosition.swift */,
+				92CCD7BC25AD2BB100F85318 /* MindMapLineView.swift */,
+				92CCD7C225AD2C7900F85318 /* MindMapNode.swift */,
+				921B85B525AEE0EF006AB77F /* MindMapViewController.swift */,
+			);
+			path = MindMap;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -444,6 +452,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92E732C725B518B500674977 /* MindMapNode.swift in Sources */,
+				92E732C625B518B500674977 /* MindMapView.swift in Sources */,
+				92E732C825B518B500674977 /* MindMapPosition.swift in Sources */,
+				92E732C425B518B500674977 /* MindMapViewController.swift in Sources */,
+				92E732C525B518B500674977 /* MindMapLineView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,13 +465,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				929105FB25AC295A00E08BA1 /* ViewController.swift in Sources */,
-				9291063325AC2C3500E08BA1 /* MindMapView.swift in Sources */,
-				927008E625AC92640059609B /* MindMapPosition.swift in Sources */,
-				921B85B625AEE0EF006AB77F /* MindMapViewController.swift in Sources */,
-				92CCD7C325AD2C7900F85318 /* MindMapNode.swift in Sources */,
 				929105F725AC295A00E08BA1 /* AppDelegate.swift in Sources */,
 				929105F925AC295A00E08BA1 /* SceneDelegate.swift in Sources */,
-				92CCD7BD25AD2BB100F85318 /* MindMapLineView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,6 +697,7 @@
 		9291061C25AC295B00E08BA1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -707,6 +716,7 @@
 		9291061D25AC295B00E08BA1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class CustomView: UIView {
+open class CustomView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -17,7 +17,7 @@ class CustomView: UIView {
         addTarget()
     }
     
-    required init?(coder: NSCoder) {
+    required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -36,13 +36,13 @@ class CustomView: UIView {
 
 
 
-class MindMapNodeView: CustomView {
-    static var nodeGap: CGFloat = 50
-    static var nodeLineGap: CGFloat = 20
-    var mindMapNode: MindMapNode
-    var line: MindMapLineView?
-    var parentNodeView: MindMapNodeView?
-    let nameLabel: UILabel = {
+open class MindMapNodeView: CustomView {
+    public static var nodeGap: CGFloat = 50
+    public static var nodeLineGap: CGFloat = 20
+    open var mindMapNode: MindMapNode
+    open var line: MindMapLineView?
+    open var parentNodeView: MindMapNodeView?
+    public let nameLabel: UILabel = {
         let x = UILabel()
         x.textColor = .white
         x.setContentHuggingPriority(.init(1000), for: .vertical)
@@ -52,15 +52,15 @@ class MindMapNodeView: CustomView {
         return x
     }()
     
-    var selectedBorderColor = UIColor.gray
+    public var selectedBorderColor = UIColor.gray
     
-    var selected: Bool = false {
+    public var selected: Bool = false {
         didSet {
             self.layer.borderWidth = selected ? 3: 0
         }
     }
     
-    init(node: MindMapNode) {
+    public init(node: MindMapNode) {
         self.mindMapNode = node
         super.init(frame: .zero)
         node.view = self
@@ -68,7 +68,7 @@ class MindMapNodeView: CustomView {
         self.layer.borderWidth = selected ? 3: 0
     }
     
-    func selfDragSafeArea() -> CGRect {
+    public func selfDragSafeArea() -> CGRect {
         var rect = frame
         let extendWidth = MindMapNodeView.nodeGap
         if mindMapNode.position.isLeftPosition() == false {
@@ -82,7 +82,7 @@ class MindMapNodeView: CustomView {
         return rect
     }
     
-    func selfAndOneDeepChildSafeArea() -> CGRect {
+    public func selfAndOneDeepChildSafeArea() -> CGRect {
         var rect: CGRect = selfDragSafeArea()
         var rects = [CGRect]()
         for c in mindMapNode.children {
@@ -102,11 +102,11 @@ class MindMapNodeView: CustomView {
         return rect
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setupUI() {
+    public override func setupUI() {
         backgroundColor = .black
            _ = [nameLabel]
             .map{addSubview($0)}
@@ -118,13 +118,13 @@ class MindMapNodeView: CustomView {
         nameLabel.text = mindMapNode.name
     }
     
-    func getInnerNodeView() -> [MindMapNodeView] {
+    public func getInnerNodeView() -> [MindMapNodeView] {
         
         return mindMapNode.getInnerNode().map{$0.view}
             .compactMap{$0}
     }
     
-    func removeOtherNodeViewConstraint(constraintsContainerView: UIView) {
+    public func removeOtherNodeViewConstraint(constraintsContainerView: UIView) {
         let innerNodeView = getInnerNodeView()
         
         for c in constraintsContainerView.constraints.filter({$0.firstItem is MindMapNodeView && $0.secondItem is MindMapNodeView}) {

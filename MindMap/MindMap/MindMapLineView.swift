@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class MindMapLineView: CustomView {
+open class MindMapLineView: CustomView {
     let pathLayer = CAShapeLayer()
     
     override func setupUI() {
@@ -81,7 +81,7 @@ class MindMapLineView: CustomView {
     
 
 
-    override func layoutSubviews() {
+    open override func layoutSubviews() {
         pathLayer.frame = bounds
         
         // bezier
@@ -102,10 +102,6 @@ class MindMapLineView: CustomView {
         pathLayer.strokeColor = UIColor.red.cgColor
         pathLayer.fillColor = nil
         pathLayer.path = useBezier ? path.cgPath : linePath
-    }
-    
-    override func updateConstraints() {
-        super.updateConstraints()
     }
     
 }

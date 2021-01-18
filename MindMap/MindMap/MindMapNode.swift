@@ -9,15 +9,16 @@ import Foundation
 import UIKit
 
 
-class MindMapNode {
-    var name: String = ""
-    var position: MindMapPosition = .rightBottom
+open class MindMapNode {
+    open var name: String = ""
+    open var position: MindMapPosition = .rightBottom
     
     private(set) var children: [MindMapNode] = []
-    weak var parent: MindMapNode?
-    weak var view: MindMapNodeView?
+    open weak var parent: MindMapNode?
+    public weak var view: MindMapNodeView?
+    public init(){}
     
-    func resort() {
+    public func resort() {
         
         //翻转
         if parent != nil {
@@ -62,11 +63,11 @@ class MindMapNode {
         
     }
     
-    func removeFromParent() {
+    public func removeFromParent() {
         parent?.removeChild(node: self)
     }
     
-    func removeChild(node: MindMapNode) {
+    public func removeChild(node: MindMapNode) {
         if let index = children.firstIndex(where: {$0 === node}) {
             children.remove(at: index)
         }
@@ -75,20 +76,21 @@ class MindMapNode {
     }
     
     /**插入 保留position信息*/
+    /*
     func move(node: MindMapNode, newIndex: Int, newPosition: MindMapPosition) {
-
+        
         if let oldNode = self.getNode(index: newIndex, position: newPosition) {
             if oldNode === node {
                 return
             }
             
-
+            
             node.removeFromParent()
             
             guard let oldNodeIndex = children.firstIndex(where: {$0 === oldNode}) else {
                 return
             }
-
+            
             if [MindMapPosition.rightTop, MindMapPosition.leftTop].contains(newPosition) {
                 children.insert(node, at: oldNodeIndex + 1)
             } else {
@@ -111,8 +113,9 @@ class MindMapNode {
         node.position = newPosition
         resort()
     }
-
-    func addChild(node: MindMapNode, index: Int? = nil) {
+ */
+    
+  public  func addChild(node: MindMapNode, index: Int? = nil) {
         node.parent = self
         if let i = index {
             children.insert(node, at: i)
@@ -134,21 +137,22 @@ class MindMapNode {
         if [MindMapPosition.leftBottom, MindMapPosition.rightBottom].contains(position) {
             let nodes = parent.nodes(positions: [position])
             if let index = nodes.firstIndex(where: {$0 === self}) {
-               return index + 1
+                return index + 1
             }
         } else {
-
+            
             let nodes = parent.nodes(positions: [position])
             if let index = nodes.firstIndex(where: {$0 === self}) {
                 return nodes.count - index
             }
-
+            
         }
         
         return 0
     }
     
-    func calcInsertIndex(newPosition: MindMapPosition, geoIndex: Int) -> Int {
+    
+   public func calcInsertIndex(newPosition: MindMapPosition, geoIndex: Int) -> Int {
         let result = nodes(positions: [newPosition])
         var insertIndex = geoIndex
         
@@ -177,7 +181,7 @@ class MindMapNode {
         }
     }
     
-    func slibing(isLast: Bool = true) -> MindMapNode? {
+    public func slibing(isLast: Bool = true) -> MindMapNode? {
         guard let c = parent?.children.filter({ (x) -> Bool in
             x.position.isLeftPosition() == self.position.isLeftPosition()
         }) else {
@@ -191,7 +195,7 @@ class MindMapNode {
                 }
                 return c[index - 1]
             } else {
-               let i = index + 1
+                let i = index + 1
                 if i == c.count {
                     return nil
                 }
@@ -201,7 +205,7 @@ class MindMapNode {
         return nil
     }
     
-    func deepNode(isTop: Bool = true) -> MindMapNode {
+    public func deepNode(isTop: Bool = true) -> MindMapNode {
         if children.count == 0 {
             return self
         }
@@ -213,7 +217,7 @@ class MindMapNode {
         }
     }
     
-    func getInnerNode() -> [MindMapNode] {
+    public func getInnerNode() -> [MindMapNode] {
         
         var result = [MindMapNode]()
         result.append(self)
@@ -222,8 +226,8 @@ class MindMapNode {
         }
         return result
     }
-
-    fileprivate func nodes(positions: [MindMapPosition]) -> [MindMapNode] {
+    
+    public func nodes(positions: [MindMapPosition]) -> [MindMapNode] {
         return children.filter{positions.contains($0.position)}
     }
 }
