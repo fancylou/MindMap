@@ -17,6 +17,7 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
             oldValue?.selected = false
             oldValue?.nameTextField.isUserInteractionEnabled = false
             selectedView?.selected = true
+            updateToolView()
         }
     }
     public let toolView: NodeToolView = {
@@ -25,7 +26,9 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     public let scrollView: UIScrollView = {
-      let x = UIScrollView()
+        let x = UIScrollView()
+        x.maximumZoomScale = 2
+        x.minimumZoomScale = 0.5
         return x
     }()
     
@@ -45,8 +48,6 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
 //        contentView.backgroundColor = .green
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        scrollView.maximumZoomScale = 2
-        scrollView.minimumZoomScale = 0.5
         scrollView.delegate = self
 
         scrollView.snp.makeConstraints { (ConstraintMaker) in
@@ -74,13 +75,64 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
 
         toolView.addChildNodeBtn.addTarget(self, action: #selector(addChildNode), for: .touchUpInside)
         toolView.addSlibingNodeBtn.addTarget(self, action: #selector(addSlibingChildNode), for: .touchUpInside)
+        toolView.locationBtn.addTarget(self, action: #selector(gotoMapSource), for: .touchUpInside)
+        toolView.deleteBtn.addTarget(self, action: #selector(deleteNode), for: .touchUpInside)
+        
+        let viewTap = UITapGestureRecognizer(target: self, action: #selector(MindMapViewController.viewTap))
+        view.addGestureRecognizer(viewTap)
+        updateToolView()
     }
     
-    func gotoMapSource() {
+    @objc func deleteNode() {
+        if selectedView?.mindMapNode === mindMapData {
+            return
+        }
+        
+        let views = selectedView?.getInnerNodeView()
+        
+        selectedView?.mindMapNode.removeFromParent()
+        
+        _ = views?.map({ (v:MindMapNodeView) in
+            v.line?.removeFromSuperview()
+            v.removeFromSuperview()
+        })
+
+        if let d = mindMapData {
+            updateNodesConstraints(node: d)
+            
+            UIView.animate(withDuration: 0.25) {
+                self.view.layoutIfNeeded()
+            } completion: {[unowned self] (_) in
+                self.updateContentSize()
+            }
+        }
+        
+    }
+    
+    @objc func viewTap() {
+        self.selectedView = nil
+    }
+    
+    func updateToolView() {
+        if selectedView == nil || selectedView?.mindMapNode === mindMapData {
+            _ = [self.toolView.addChildNodeBtn, self.toolView.addSlibingNodeBtn, self.toolView.deleteBtn]
+                .map{$0.isHidden = true}
+        } else {
+            _ = [self.toolView.addChildNodeBtn, self.toolView.addSlibingNodeBtn, self.toolView.deleteBtn]
+                .map{$0.isHidden = false}
+        }
+        
+//        UIView.animate(withDuration: 0.25) {
+//            self.toolView.layoutIfNeeded()
+//        }
+    }
+    
+    @objc func gotoMapSource() {
         guard let frame = mindMapData?.view?.frame else {
             return
         }
         let screenBounds = UIScreen.main.bounds
+        self.scrollView.zoomScale = 1
         self.scrollView.setContentOffset(.init(x: frame.centerX - screenBounds.width / 2, y: frame.centerY - screenBounds.height / 2), animated: true)
     }
     
@@ -102,13 +154,16 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
         }
         
         let oldBounds = contentView.bounds
-        let widthOffset = w - oldBounds.width
-        let heightOffset = h - oldBounds.height
+        var widthOffset = w - oldBounds.width
+        var heightOffset = h - oldBounds.height
         
         contentView.snp.updateConstraints { (ConstraintMaker) in
             ConstraintMaker.width.equalTo(w)
             ConstraintMaker.height.equalTo(h)
         }
+        
+        widthOffset *= self.scrollView.zoomScale
+        heightOffset *= self.scrollView.zoomScale
 
         self.view.layoutIfNeeded()
         let oldOffset = self.scrollView.contentOffset
@@ -183,8 +238,7 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
         offset.x /= self.scrollView.zoomScale
         offset.y /= self.scrollView.zoomScale
         let offsetCenter = v.frame.offsetCenter(rect: parentNodeView.frame)
-        
-        
+
         switch pan.state {
             case .began:
                 closedNode = parentNodeView.mindMapNode

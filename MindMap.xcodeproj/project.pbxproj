@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9275171B25B668B50062FEAC /* location@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9275171825B668B50062FEAC /* location@3x.png */; };
+		9275175225B687F20062FEAC /* delete@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9275175125B687F20062FEAC /* delete@3x.png */; };
 		929105E925AC292100E08BA1 /* MindMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 929105E725AC292100E08BA1 /* MindMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		929105F725AC295A00E08BA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929105F625AC295A00E08BA1 /* AppDelegate.swift */; };
 		929105F925AC295A00E08BA1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929105F825AC295A00E08BA1 /* SceneDelegate.swift */; };
@@ -22,7 +24,7 @@
 		9291065F25AC35D000E08BA1 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9291066125AC35E000E08BA1 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; };
 		9291066225AC35E000E08BA1 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9291065625AC35BA00E08BA1 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9298FAA425B560F900776ABB /* node_slibing.png in Resources */ = {isa = PBXBuildFile; fileRef = 9298FAA225B560F900776ABB /* node_slibing.png */; };
+		9298FAA425B560F900776ABB /* node_slibing@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9298FAA225B560F900776ABB /* node_slibing@3x.png */; };
 		9298FAA525B560F900776ABB /* node@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9298FAA325B560F900776ABB /* node@3x.png */; };
 		9298FAA925B5659800776ABB /* MindMapRes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9298FAA825B5659800776ABB /* MindMapRes.swift */; };
 		9298FAB325B566EB00776ABB /* NodeToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9298FAB225B566EB00776ABB /* NodeToolView.swift */; };
@@ -100,6 +102,8 @@
 /* Begin PBXFileReference section */
 		921B85B525AEE0EF006AB77F /* MindMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapViewController.swift; sourceTree = "<group>"; };
 		927008E525AC92640059609B /* MindMapPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapPosition.swift; sourceTree = "<group>"; };
+		9275171825B668B50062FEAC /* location@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "location@3x.png"; sourceTree = "<group>"; };
+		9275175125B687F20062FEAC /* delete@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete@3x.png"; sourceTree = "<group>"; };
 		929105E425AC292100E08BA1 /* MindMap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MindMap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		929105E725AC292100E08BA1 /* MindMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MindMap.h; sourceTree = "<group>"; };
 		929105E825AC292100E08BA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -119,7 +123,7 @@
 		9291061A25AC295B00E08BA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9291063225AC2C3500E08BA1 /* MindMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapView.swift; sourceTree = "<group>"; };
 		9291065025AC35BA00E08BA1 /* SnapKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SnapKit.xcodeproj; path = Carthage/Checkouts/SnapKit/SnapKit.xcodeproj; sourceTree = "<group>"; };
-		9298FAA225B560F900776ABB /* node_slibing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = node_slibing.png; sourceTree = "<group>"; };
+		9298FAA225B560F900776ABB /* node_slibing@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "node_slibing@3x.png"; sourceTree = "<group>"; };
 		9298FAA325B560F900776ABB /* node@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "node@3x.png"; sourceTree = "<group>"; };
 		9298FAA825B5659800776ABB /* MindMapRes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MindMapRes.swift; sourceTree = "<group>"; };
 		9298FAB225B566EB00776ABB /* NodeToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeToolView.swift; sourceTree = "<group>"; };
@@ -256,7 +260,9 @@
 		9298FAA125B560EF00776ABB /* Res */ = {
 			isa = PBXGroup;
 			children = (
-				9298FAA225B560F900776ABB /* node_slibing.png */,
+				9275175125B687F20062FEAC /* delete@3x.png */,
+				9275171825B668B50062FEAC /* location@3x.png */,
+				9298FAA225B560F900776ABB /* node_slibing@3x.png */,
 				9298FAA325B560F900776ABB /* node@3x.png */,
 			);
 			path = Res;
@@ -446,8 +452,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9298FAA425B560F900776ABB /* node_slibing.png in Resources */,
+				9275175225B687F20062FEAC /* delete@3x.png in Resources */,
+				9298FAA425B560F900776ABB /* node_slibing@3x.png in Resources */,
 				9298FAA525B560F900776ABB /* node@3x.png in Resources */,
+				9275171B25B668B50062FEAC /* location@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -690,6 +698,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = MindMap/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -713,6 +722,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = MindMap/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -733,7 +743,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R8C2D87XST;
 				INFOPLIST_FILE = Example/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -752,7 +764,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R8C2D87XST;
 				INFOPLIST_FILE = Example/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

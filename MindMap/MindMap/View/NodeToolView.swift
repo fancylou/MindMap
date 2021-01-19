@@ -28,6 +28,24 @@ public class NodeToolView: NodeMapCustomView {
         return x
     }()
     
+    public let locationBtn: UIButton = {
+      let x = UIButton()
+        x.setImage(MindMapRes.location(), for: .normal)
+        x.backgroundColor = UIColor.lightGray
+        x.layer.cornerRadius = 8
+        x.imageEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
+        return x
+    }()
+    
+    public let deleteBtn: UIButton = {
+      let x = UIButton()
+        x.setImage(MindMapRes.image(named: "delete"), for: .normal)
+        x.backgroundColor = UIColor.lightGray
+        x.layer.cornerRadius = 8
+        x.imageEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
+        return x
+    }()
+    
     let stackView: UIStackView = {
         let x = UIStackView()
         x.axis = .horizontal
@@ -42,7 +60,7 @@ public class NodeToolView: NodeMapCustomView {
             ConstraintMaker.edges.equalToSuperview()
         }
         
-       _ = [addChildNodeBtn, addSlibingNodeBtn]
+       _ = [addChildNodeBtn, addSlibingNodeBtn, locationBtn, deleteBtn]
         .map{stackView.addArrangedSubview($0)}
         
         addChildNodeBtn.snp.makeConstraints { (ConstraintMaker) in
@@ -50,6 +68,14 @@ public class NodeToolView: NodeMapCustomView {
         }
         
         addSlibingNodeBtn.snp.makeConstraints { (ConstraintMaker) in
+            ConstraintMaker.size.equalTo(CGSize.init(width: 40, height: 40))
+        }
+        
+        locationBtn.snp.makeConstraints { (ConstraintMaker) in
+            ConstraintMaker.size.equalTo(CGSize.init(width: 40, height: 40))
+        }
+        
+        deleteBtn.snp.makeConstraints { (ConstraintMaker) in
             ConstraintMaker.size.equalTo(CGSize.init(width: 40, height: 40))
         }
     }

@@ -10,6 +10,9 @@ import UIKit
 
 public class MindMapRes {
     // convenient for specific image
+    public static func location() -> UIImage {
+        return image(named: "location") ?? UIImage()
+    }
     
     public static func node_slibing() -> UIImage {
         return image(named: "node_slibing") ?? UIImage()
