@@ -115,7 +115,7 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
     
     func updateToolView() {
         if selectedView == nil || selectedView?.mindMapNode === mindMapData {
-            _ = [self.toolView.addChildNodeBtn, self.toolView.addSlibingNodeBtn, self.toolView.deleteBtn]
+            _ = [self.toolView.addSlibingNodeBtn, self.toolView.deleteBtn]
                 .map{$0.isHidden = true}
         } else {
             _ = [self.toolView.addChildNodeBtn, self.toolView.addSlibingNodeBtn, self.toolView.deleteBtn]

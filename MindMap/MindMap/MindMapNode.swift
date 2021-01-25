@@ -12,6 +12,7 @@ import UIKit
 open class MindMapNode {
     open var name: String = ""
     open var position: MindMapPosition = .rightBottom
+//    open var payload: Payload?
     
     private(set) var children: [MindMapNode] = []
     open weak var parent: MindMapNode?
