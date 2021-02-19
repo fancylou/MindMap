@@ -8,8 +8,12 @@
 import Foundation
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 open class MindMapViewController: UIViewController, UIScrollViewDelegate {
+
+    let disposeBag = DisposeBag()
 
    open var mindMapData: MindMapNode?
    open var selectedView: MindMapNodeView? {
@@ -73,7 +77,8 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
             ConstraintMaker.bottom.equalTo(-30)
         }
 
-        toolView.addChildNodeBtn.addTarget(self, action: #selector(addChildNode), for: .touchUpInside)
+//        toolView.addChildNodeBtn.addTarget(self, action: #selector(addChildNode), for: .touchUpInside)
+        
         toolView.addSlibingNodeBtn.addTarget(self, action: #selector(addSlibingChildNode), for: .touchUpInside)
         toolView.locationBtn.addTarget(self, action: #selector(gotoMapSource), for: .touchUpInside)
         toolView.deleteBtn.addTarget(self, action: #selector(deleteNode), for: .touchUpInside)
@@ -81,8 +86,19 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
         let viewTap = UITapGestureRecognizer(target: self, action: #selector(MindMapViewController.viewTap))
         view.addGestureRecognizer(viewTap)
         updateToolView()
+        
+        addTarget()
     }
     
+    func addTarget() {
+        toolView.addChildNodeBtn.rx.tap
+            .bind {[unowned self] (_) in
+                self.addChildNode(node: nil)
+            }.disposed(by: disposeBag)
+            
+    }
+    
+
     @objc func deleteNode() {
         if selectedView?.mindMapNode === mindMapData {
             return
@@ -190,16 +206,23 @@ open class MindMapViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    @objc func addChildNode() {
-        guard let selectedView = selectedView else {
-           return
+    public func addChildNode(node: MindMapNode?) {
+        guard let mindMapData = mindMapData else {
+            return
         }
         
-        let node = MindMapNode.init()
-        node.name = "子节点"
-        selectedView.mindMapNode.addChild(node: node)
-        updateNodesConstraints(parentNode: nil, node: mindMapData!)
-        
+        let aSelectView = selectedView ?? mindMapData.view!
+
+        if let n = node {
+            aSelectView.mindMapNode.addChild(node: n)
+            updateNodesConstraints(parentNode: nil, node: mindMapData)
+        } else {
+            let node = MindMapNode.init()
+            node.name = "子节点"
+            aSelectView.mindMapNode.addChild(node: node)
+            updateNodesConstraints(parentNode: nil, node: mindMapData)
+        }
+
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         } completion: {[unowned self] (_) in
